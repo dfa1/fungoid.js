@@ -39,6 +39,26 @@ var Fungoid = {
 		};
 	},
 
+	take: function(n) {
+		var i = n;
+		return function(e, output) {
+			if (i-- > 0) {
+				output(e);
+			}
+		};
+	},
+
+	drop: function(n) {
+		var i = 0;
+		return function(e, output) {
+			i++;
+			if (i > n) {
+				output(e);
+			}
+		};
+	},
+
+
 	transform: function(input, fn, output) {
 		for (;;) {
 			var it = input();
