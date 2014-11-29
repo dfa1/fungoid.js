@@ -18,11 +18,9 @@ var Fungoid = {
 		};
 	},
 
-	array_output_iterator: function() {
-		var output = [];
+	array_output_iterator: function(array) {
 		return function(e) {
-			output.push(e);
-			return output;
+			array.push(e);
 		};
 	},
 
@@ -36,11 +34,10 @@ var Fungoid = {
 		for (;;) {
 			var it = input();
 			if (!it.done) {
-				var res = output(fn(it.value));
+				output(fn(it.value));
 			} else {
 				break;
 			}
 		}
-		return res;
 	}
 };
