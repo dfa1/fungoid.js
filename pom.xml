@@ -24,6 +24,9 @@
 						</goals>
 					</execution>
 				</executions>
+				<configuration>
+				<autoRefreshInterval>1</autoRefreshInterval>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
