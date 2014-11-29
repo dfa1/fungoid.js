@@ -25,8 +25,17 @@ var Fungoid = {
 	},
 
 	mapper: function(fn) {
-		return function(e) {
-			return fn(e);
+		return function(e, output) {
+			output(fn(e));
+		};
+	},
+
+	filter: function(fn) {
+		return function(e, output) {
+			var accepted = fn(e);
+			if (accepted) {
+				output(e);
+			}
 		};
 	},
 
@@ -34,7 +43,7 @@ var Fungoid = {
 		for (;;) {
 			var it = input();
 			if (!it.done) {
-				output(fn(it.value));
+				fn(it.value, output);
 			} else {
 				break;
 			}
