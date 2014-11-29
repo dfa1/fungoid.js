@@ -35,7 +35,7 @@ describe("fungoid", function() {
 		expect(output).toEqual([ 1, 3 ]);
 	});
 
-	it('transform empty array', function() {
+	it('filter empty array', function() {
 		var input = [];
 		var output = [];
 		Fungoid.transform(
