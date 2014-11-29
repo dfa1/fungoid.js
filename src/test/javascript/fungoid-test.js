@@ -90,5 +90,14 @@ describe("fungoid", function() {
 		expect(output).toEqual([]);
 	});
 
+	it('range', function() {
+		var output = [];
+		Fungoid.transform(
+			Fungoid.range_input_iterator(10, 13),
+			Fungoid.identity(),
+			Fungoid.array_output_iterator(output)
+		);
+		expect(output).toEqual([10, 11, 12]);
+	});
 
 });

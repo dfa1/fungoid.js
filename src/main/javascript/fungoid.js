@@ -2,6 +2,23 @@
 
 var Fungoid = {
 
+	// [from, to)
+	range_input_iterator: function(from, to) {
+		var i = from;
+		return function() {
+			if (i < to) {
+				return {
+					value: i++,
+					done: false
+				};
+			} else {
+				return {
+					done: true
+				};
+			}
+		};
+	},
+
 	array_input_iterator: function(array) {
 		var i = 0;
 		return function() {
@@ -21,6 +38,12 @@ var Fungoid = {
 	array_output_iterator: function(array) {
 		return function(e) {
 			array.push(e);
+		};
+	},
+
+	identity: function(fn) {
+		return function(e, output) {
+			output(e);
 		};
 	},
 
