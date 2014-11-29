@@ -42,11 +42,10 @@ var Fungoid = {
 	transform: function(input, fn, output) {
 		for (;;) {
 			var it = input();
-			if (!it.done) {
-				fn(it.value, output);
-			} else {
+			if (it.done) {
 				break;
 			}
+			fn(it.value, output);
 		}
 	}
 };
