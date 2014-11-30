@@ -1,5 +1,18 @@
 'use strict';
 
+// Objectives:
+// - decoupling transformations from input and output
+//     input is a function that when called produces one value
+//     output is a function that when called procedes a side effect (i.e. push() into an array)
+//     transformations as reusable and unit-testable functions
+// - [] -> []: map, filter, reduce, take, drop, takeWhile, dropWhile, dedup
+// - [] -> single value: max, min
+// - no external dependencies
+
+// TODO:
+//  - reduce
+//  - short circuit steps (i.e. drop, take)
+
 var Fungoid = {
 
 	// ES6-like iterator protocol
