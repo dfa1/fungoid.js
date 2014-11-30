@@ -77,6 +77,9 @@ var Fungoid = {
 	},
 
 	take: function(n) {
+		if (n < 0) {
+			throw new Error("n cannot be negative: " + n);
+		}
 		var i = n;
 		return function(e) {
 			var accepted = i-- > 0;
@@ -89,6 +92,9 @@ var Fungoid = {
 	},
 
 	drop: function(n) {
+		if (n < 0) {
+			throw new Error("n cannot be negative: " + n);
+		}
 		var i = 0;
 		return function(e) {
 			return { accepted: i++ >= n, value: e };

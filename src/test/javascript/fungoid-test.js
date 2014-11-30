@@ -95,6 +95,23 @@ describe("fungoid", function() {
 			expect(output).toEqual([]);
 		});
 
+		it('-1 items', function() {
+			expect(function() {
+				Fungoid.drop(-1);
+			}).toThrow(new Error("n cannot be negative: -1"));
+		});
+
+		it('from empty source', function() {
+			var input = [];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.drop(1),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([]);
+		});
+
 	});
 
 	describe("take", function() {
@@ -131,6 +148,12 @@ describe("fungoid", function() {
 			expect(output).toEqual([]);
 		});
 
+		it('-1 items', function() {
+			expect(function() {
+				Fungoid.take(-1);
+			}).toThrow(new Error("n cannot be negative: -1"));
+		});
+
 		it('more items than input', function() {
 			var input = [ 1, 2, 3 ];
 			var output = [];
@@ -142,8 +165,7 @@ describe("fungoid", function() {
 			expect(output).toEqual(input);
 		});
 
-
-		it('from empty array', function() {
+		it('from empty source', function() {
 			var input = [];
 			var output = [];
 			Fungoid.transform(
