@@ -75,7 +75,7 @@ describe("fungoid", function() {
 	});
 
 	describe("take", function() {
-		it('take array', function() {
+		it('one item', function() {
 			var input = [ 1, 2, 3 ];
 			var output = [];
 			Fungoid.transform(
@@ -86,7 +86,29 @@ describe("fungoid", function() {
 			expect(output).toEqual([ 1 ]);
 		});
 
-		it('take empty array', function() {
+		it('two items', function() {
+			var input = [ 1, 2, 3 ];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.take(2),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([ 1, 2 ]);
+		});
+
+		it('zero items', function() {
+			var input = [ 1, 2, 3 ];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.take(0),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([]);
+		});
+
+		it('from empty array', function() {
 			var input = [];
 			var output = [];
 			Fungoid.transform(
@@ -95,6 +117,21 @@ describe("fungoid", function() {
 				Fungoid.array_output_iterator(output)
 				);
 			expect(output).toEqual([]);
+		});
+
+		it('short circuit', function() {
+			var count = 0 ;
+			var fn = Fungoid.compose(
+				Fungoid.take(5),
+				Fungoid.mapper(function(e) { count++; return e; })
+			);
+			var output = [];
+			Fungoid.transform(
+				Fungoid.range_input_iterator(1, 50),
+				fn,
+				Fungoid.array_output_iterator(output)
+				);
+			expect(count).toEqual(5);
 		});
 	});
 
@@ -120,7 +157,7 @@ describe("fungoid", function() {
 			);
 			expect(max).toEqual(12);
 		});
-		it('last value is not ignoed', function() {
+		it('last value is not ignored', function() {
 			var input = [ 1, 2, 3, 12 ] ;
 			var max = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
