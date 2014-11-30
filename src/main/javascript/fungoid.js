@@ -5,8 +5,7 @@
 //     input is a function that when called produces one value
 //     output is a function that when called procedes a side effect (i.e. push() into an array)
 //     transformations as reusable and unit-testable functions
-// - [] -> []: map, filter, reduce, take, drop, takeWhile, dropWhile, dedup
-// - [] -> single value: max, min
+// - map, filter, reduce, take, drop, takeWhile, dropWhile, dedup
 // - no external dependencies
 
 // TODO:

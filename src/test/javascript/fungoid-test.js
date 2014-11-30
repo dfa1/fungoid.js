@@ -129,7 +129,6 @@ describe("fungoid", function() {
 			);
 			expect(max).toEqual(12);
 		});
-
 	});
 
 	describe("compose", function() {
@@ -161,9 +160,9 @@ describe("fungoid", function() {
 
 	});
 
-	describe("integration", function() {
+	describe("stress tests", function() {
 
-		it("filter->map", function() {
+		it("filter->map many items", function() {
 			var fn = Fungoid.compose(
 				Fungoid.filter(function(e) { return e % 100000 == 0; }),
 				Fungoid.mapper(function(e) { return "" + e; })
