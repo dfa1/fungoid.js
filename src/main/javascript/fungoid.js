@@ -5,12 +5,10 @@
 //     input is a function that when called produces one value
 //     output is a function that when called procedes a side effect (i.e. push() into an array)
 //     transformations as reusable and unit-testable functions
+// - no intermediate allocations unlike underscore.js, lodash, etc
 // - map, filter, reduce, take, drop, takeWhile, dropWhile, dedup
 // - no external dependencies
 
-// TODO:
-//  - transform() return value is not always usable
-//    (e.g. array_output_iterator never called yields undefined)
 var Fungoid = {
 
 	// ES6-like iterator protocol
@@ -116,6 +114,7 @@ var Fungoid = {
 		};
 	},
 
+	// compose(f,g,h) -> h(g(f(item)))
 	compose: function() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
