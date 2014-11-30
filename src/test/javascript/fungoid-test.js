@@ -110,6 +110,28 @@ describe("fungoid", function() {
 		});
 	});
 
+	describe("reduce", function() {
+		it('first value is not ignored', function() {
+			var input = [ 12, 11, 10, 9 ] ;
+			var max = Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.reduce(Math.max),
+				Fungoid.save_output_iterator()
+			);
+			expect(max).toEqual(12);
+		});
+		it('last value is not ignoed', function() {
+			var input = [ 1, 2, 3, 12 ] ;
+			var max = Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.reduce(Math.max),
+				Fungoid.save_output_iterator()
+			);
+			expect(max).toEqual(12);
+		});
+
+	});
+
 	describe("compose", function() {
 		it("one function", function() {
 			var fn = Fungoid.compose(

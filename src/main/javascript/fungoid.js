@@ -10,7 +10,6 @@
 // - no external dependencies
 
 // TODO:
-//  - reduce
 //  - short circuit steps (i.e. drop, take)
 
 var Fungoid = {
@@ -50,6 +49,13 @@ var Fungoid = {
 	array_output_iterator: function(array) {
 		return function(e) {
 			array.push(e);
+			return array;
+		};
+	},
+
+	save_output_iterator: function() {
+		return function(e) {
+			return e;
 		};
 	},
 
@@ -85,6 +91,21 @@ var Fungoid = {
 		};
 	},
 
+	reduce: function(fn) {
+		var value = null;
+		var hasInit = false;
+		return function(e) {
+			if (hasInit) {
+				value = fn(value, e);
+				return { accepted: true, value: value };
+			} else {
+				hasInit = true;
+				value = e;
+				return { accepted: true, value: e };
+			}
+		};
+	},
+
 	compose: function() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
@@ -100,6 +121,7 @@ var Fungoid = {
 	},
 
 	transform: function(input, fn, output) {
+		var res;
 		for (;;) {
 			var it = input();
 			if (it.done) {
@@ -107,8 +129,9 @@ var Fungoid = {
 			}
 			var outcome = fn(it.value);
 			if (outcome.accepted) {
-				output(outcome.value);
+				res = output(outcome.value);
 			}
 		}
+		return res;
 	}
 };
