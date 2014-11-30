@@ -99,7 +99,7 @@ describe("fungoid", function() {
 	});
 
 	describe("range", function() {
-		it('range', function() {
+		it('range->array', function() {
 			var output = [];
 			Fungoid.transform(
 				Fungoid.range_input_iterator(10, 13),
@@ -110,4 +110,39 @@ describe("fungoid", function() {
 		});
 	});
 
+	describe("compose", function() {
+		it("one function", function() {
+			var fn = Fungoid.compose(
+				Fungoid.identity()
+			);
+			var outcome = fn(1);
+			expect(outcome.accepted).toEqual(true);
+		});
+
+		it("first function discards", function() {
+			var fn = Fungoid.compose(
+				Fungoid.filter(function(e) { return e == 2; }),
+				Fungoid.identity()
+			);
+			var outcome = fn(1);
+			expect(outcome.accepted).toEqual(false);
+		});
+
+		it("composition function", function() {
+			var fn = Fungoid.compose(
+				Fungoid.filter(function(e) { return e == 2; }),
+				Fungoid.identity()
+			);
+			var input = [1, 2, 3];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				fn,
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([ 2 ]);
+		});
+
+
+	});
 });

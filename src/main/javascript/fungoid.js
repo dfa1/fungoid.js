@@ -46,44 +46,50 @@ var Fungoid = {
 	},
 
 	identity: function(fn) {
-		return function(e, output) {
-			output(e);
+		return function(e) {
+			return { accepted: true, value: e };
 		};
 	},
 
 	mapper: function(fn) {
-		return function(e, output) {
-			output(fn(e));
+		return function(e) {
+			return { accepted: true, value: fn(e) };
 		};
 	},
 
 	filter: function(fn) {
-		return function(e, output) {
-			var accepted = fn(e);
-			if (accepted) {
-				output(e);
-			}
+		return function(e) {
+			return { accepted: fn(e), value: e };
 		};
 	},
 
 	take: function(n) {
 		var i = n;
-		return function(e, output) {
-			if (i-- > 0) {
-				output(e);
-			}
+		return function(e) {
+			return { accepted: i-- > 0, value: e };
 		};
 	},
 
 	drop: function(n) {
 		var i = 0;
-		return function(e, output) {
-			if (i++ >= n) {
-				output(e);
-			}
+		return function(e) {
+			return { accepted: i++ >= n, value: e };
 		};
 	},
 
+	compose: function() {
+		var fns = Array.prototype.slice.call(arguments);
+		return function(e) {
+			for (var i = 0; i < fns.length; i++) {
+				var fn = fns[i];
+				var outcome = fn(e);
+				if (!outcome.accepted) {
+					return { accepted: false, value: e };
+				}
+			}
+			return { accepted: true, value: e };
+		};
+	},
 
 	transform: function(input, fn, output) {
 		for (;;) {
@@ -91,7 +97,10 @@ var Fungoid = {
 			if (it.done) {
 				break;
 			}
-			fn(it.value, output);
+			var outcome = fn(it.value);
+			if (outcome.accepted) {
+				output(outcome.value);
+			}
 		}
 	}
 };
