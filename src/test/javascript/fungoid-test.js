@@ -128,21 +128,33 @@ describe("fungoid", function() {
 			expect(outcome.accepted).toEqual(false);
 		});
 
-		it("composition function", function() {
+		it("accepted by all steps", function() {
 			var fn = Fungoid.compose(
-				Fungoid.filter(function(e) { return e == 2; }),
-				Fungoid.identity()
+				Fungoid.filter(function(e) { return e == 1; }),
+				Fungoid.mapper(function(e) { return "" + e; })
 			);
-			var input = [1, 2, 3];
+			var outcome = fn(1);
+			expect(outcome.value).toEqual("1");
+		});
+
+	});
+
+	describe("integration", function() {
+
+		it("filter->map", function() {
+			var fn = Fungoid.compose(
+				Fungoid.filter(function(e) { return e % 1000 == 0; }),
+				Fungoid.mapper(function(e) { return "" + e; })
+			);
 			var output = [];
 			Fungoid.transform(
-				Fungoid.array_input_iterator(input),
+				Fungoid.range_input_iterator(1, 5000),
 				fn,
 				Fungoid.array_output_iterator(output)
 				);
-			expect(output).toEqual([ 2 ]);
+			expect(output).toEqual([ "1000", "2000", "3000", "4000" ]);
 		});
 
-
 	});
+
 });

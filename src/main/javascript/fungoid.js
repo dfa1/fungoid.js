@@ -82,7 +82,7 @@ var Fungoid = {
 					return { accepted: false, value: e };
 				}
 			}
-			return { accepted: true, value: e };
+			return { accepted: true, value: outcome.value };
 		};
 	},
 
