@@ -4,16 +4,11 @@ var Fungoid = {
 
 	// ES6-like iterator protocol
 	done: function() {
-		return {
-			done: true
-		};
+		return { done: true };
 	},
 
 	value: function(e) {
-		return {
-			value: e,
-			done: false
-		};
+		return { done: false, value: e };
 	},
 
 	// [from, to)
