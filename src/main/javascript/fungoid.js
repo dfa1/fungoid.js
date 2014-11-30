@@ -109,14 +109,16 @@ var Fungoid = {
 	compose: function() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
+			var prev = e;
 			for (var i = 0; i < fns.length; i++) {
 				var fn = fns[i];
-				var outcome = fn(e);
+				var outcome = fn(prev);
 				if (!outcome.accepted) {
-					return { accepted: false, value: e };
+					return { accepted: false, value: prev };
 				}
+				prev = outcome.value;
 			}
-			return { accepted: true, value: outcome.value };
+			return { accepted: true, value: prev };
 		};
 	},
 

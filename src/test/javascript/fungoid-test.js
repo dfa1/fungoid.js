@@ -158,6 +158,16 @@ describe("fungoid", function() {
 			expect(outcome.value).toEqual("1");
 		});
 
+		it("values flows between one step to another", function() {
+			var fn = Fungoid.compose(
+				Fungoid.mapper(function(e) { return e + 1; }),
+				Fungoid.mapper(function(e) { return e - 1; })
+			);
+			var outcome = fn(1);
+			expect(outcome.value).toEqual(1);
+		});
+
+
 	});
 
 	describe("stress tests", function() {
