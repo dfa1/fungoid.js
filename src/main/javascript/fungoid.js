@@ -10,7 +10,8 @@
 
 // TODO:
 //  - short circuit steps (i.e. drop, take)
-
+//  - transform() return value is not always usable
+//    (e.g. array_output_iterator never called yields undefined)
 var Fungoid = {
 
 	// ES6-like iterator protocol
@@ -91,7 +92,7 @@ var Fungoid = {
 	},
 
 	reduce: function(fn) {
-		var value = null;
+		var value;
 		var hasInit = false;
 		return function(e) {
 			if (hasInit) {
