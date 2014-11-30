@@ -143,16 +143,16 @@ describe("fungoid", function() {
 
 		it("filter->map", function() {
 			var fn = Fungoid.compose(
-				Fungoid.filter(function(e) { return e % 1000 == 0; }),
+				Fungoid.filter(function(e) { return e % 100000 == 0; }),
 				Fungoid.mapper(function(e) { return "" + e; })
 			);
 			var output = [];
 			Fungoid.transform(
-				Fungoid.range_input_iterator(1, 5000),
+				Fungoid.range_input_iterator(1, 500000),
 				fn,
 				Fungoid.array_output_iterator(output)
 				);
-			expect(output).toEqual([ "1000", "2000", "3000", "4000" ]);
+			expect(output).toEqual([ "100000", "200000", "300000", "400000" ]);
 		});
 
 	});
