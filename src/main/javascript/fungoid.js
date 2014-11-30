@@ -64,7 +64,7 @@ var Fungoid = {
 		};
 	},
 
-	mapper: function(fn) {
+	map: function(fn) {
 		return function(e) {
 			return { accepted: true, value: fn(e) };
 		};

@@ -2,13 +2,13 @@
 
 describe("fungoid", function() {
 
-	describe("mapper", function() {
+	describe("map", function() {
 		it('map array', function() {
 			var input = [ 1, 2, 3 ];
 			var output = [];
 			Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.mapper(function(x) { return x + 1; }),
+				Fungoid.map(function(x) { return x + 1; }),
 				Fungoid.array_output_iterator(output)
 				);
 			expect(output).toEqual([ 2, 3, 4]);
@@ -19,7 +19,7 @@ describe("fungoid", function() {
 			var output = [];
 			Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.mapper(function(x) { return x + 1; }),
+				Fungoid.map(function(x) { return x + 1; }),
 				Fungoid.array_output_iterator(output)
 				);
 			expect(output).toEqual([]);
@@ -180,7 +180,7 @@ describe("fungoid", function() {
 			var count = 0 ;
 			var fn = Fungoid.compose(
 				Fungoid.take(5),
-				Fungoid.mapper(function(e) { count++; return e; })
+				Fungoid.map(function(e) { count++; return e; })
 			);
 			var output = [];
 			Fungoid.transform(
@@ -246,7 +246,7 @@ describe("fungoid", function() {
 		it("accepted by all steps", function() {
 			var fn = Fungoid.compose(
 				Fungoid.filter(function(e) { return e == 1; }),
-				Fungoid.mapper(function(e) { return "" + e; })
+				Fungoid.map(function(e) { return "" + e; })
 			);
 			var outcome = fn(1);
 			expect(outcome.value).toEqual("1");
@@ -254,8 +254,8 @@ describe("fungoid", function() {
 
 		it("values flows between one step to another", function() {
 			var fn = Fungoid.compose(
-				Fungoid.mapper(function(e) { return e + 1; }),
-				Fungoid.mapper(function(e) { return e - 1; })
+				Fungoid.map(function(e) { return e + 1; }),
+				Fungoid.map(function(e) { return e - 1; })
 			);
 			var outcome = fn(1);
 			expect(outcome.value).toEqual(1);
@@ -269,7 +269,7 @@ describe("fungoid", function() {
 		it("filter->map many items", function() {
 			var fn = Fungoid.compose(
 				Fungoid.filter(function(e) { return e % 100000 == 0; }),
-				Fungoid.mapper(function(e) { return "" + e; })
+				Fungoid.map(function(e) { return "" + e; })
 			);
 			var output = [];
 			Fungoid.transform(
