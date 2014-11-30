@@ -51,7 +51,7 @@ describe("fungoid", function() {
 	});
 
 	describe("drop", function() {
-		it('drop array', function() {
+		it('one item', function() {
 			var input = [ 1, 2, 3 ];
 			var output = [];
 			Fungoid.transform(
@@ -62,16 +62,39 @@ describe("fungoid", function() {
 			expect(output).toEqual([ 2, 3 ]);
 		});
 
-		it('drop empty array', function() {
-			var input = [];
+		it('two items', function() {
+			var input = [ 1, 2, 3 ];
 			var output = [];
 			Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.drop(1),
+				Fungoid.drop(2),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([ 3 ]);
+		});
+
+		it('zero items', function() {
+			var input = [ 1, 2, 3 ];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.drop(0),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([ 1, 2, 3 ]);
+		});
+
+		it('more items than input', function() {
+			var input = [ 1, 2, 3 ];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.drop(input.length + 1),
 				Fungoid.array_output_iterator(output)
 				);
 			expect(output).toEqual([]);
 		});
+
 	});
 
 	describe("take", function() {
@@ -107,6 +130,18 @@ describe("fungoid", function() {
 				);
 			expect(output).toEqual([]);
 		});
+
+		it('more items than input', function() {
+			var input = [ 1, 2, 3 ];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.take(input.length + 1),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual(input);
+		});
+
 
 		it('from empty array', function() {
 			var input = [];
