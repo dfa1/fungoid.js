@@ -119,7 +119,8 @@ var Fungoid = (function() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
 			var prev = e;
-			for (var i = 0; i < fns.length; i++) {
+			var i;
+			for (i = 0; i < fns.length; i++) {
 				var fn = fns[i];
 				var outcome = fn(prev);
 				if (outcome.done) {
@@ -173,4 +174,4 @@ var Fungoid = (function() {
 		transform: transform
 	};
 	return public_api;
-})();
+}());

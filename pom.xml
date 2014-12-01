@@ -36,6 +36,8 @@
 				</executions>
 				<configuration>
 					<sourceJsFolder>src/main/javascript</sourceJsFolder>
+					<!-- annoying options -->
+					<allowOneVarStatementPerFunction>false</allowOneVarStatementPerFunction>
 				</configuration>
 			</plugin>
 		</plugins>
