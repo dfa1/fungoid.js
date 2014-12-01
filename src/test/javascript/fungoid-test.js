@@ -4,6 +4,7 @@
 describe("fungoid", function() {
 
 	describe("map", function() {
+
 		it('one item', function() {
 			var input = [ 1 ];
 			var output = [];
@@ -89,6 +90,7 @@ describe("fungoid", function() {
 	});
 
 	describe("drop", function() {
+
 		it('one item', function() {
 			var input = [ 1, 2, 3 ];
 			var output = [];
@@ -153,6 +155,7 @@ describe("fungoid", function() {
 	});
 
 	describe("take", function() {
+
 		it('one item', function() {
 			var input = [ 1, 2, 3 ];
 			var output = [];
@@ -231,6 +234,7 @@ describe("fungoid", function() {
 	});
 
 	describe("range", function() {
+
 		it('range->array', function() {
 			var output = [];
 			Fungoid.transform(
@@ -240,9 +244,11 @@ describe("fungoid", function() {
 				);
 			expect(output).toEqual([10, 11, 12]);
 		});
+
 	});
 
 	describe("reduce", function() {
+
 		it('first value is not ignored', function() {
 			var input = [ 12, 11, 10, 9 ] ;
 			var max = Fungoid.transform(
@@ -264,6 +270,7 @@ describe("fungoid", function() {
 	});
 
 	describe("distinct", function() {
+
 		it('one item', function() {
 			var input = [ 1 ] ;
 			var output = [];
@@ -311,6 +318,7 @@ describe("fungoid", function() {
 	});
 
 	describe("compose", function() {
+
 		it("one function", function() {
 			var fn = Fungoid.compose(
 				Fungoid.identity()
@@ -345,8 +353,6 @@ describe("fungoid", function() {
 			var outcome = fn(1);
 			expect(outcome.value).toEqual(1);
 		});
-
-
 	});
 
 	describe("stress tests", function() {
