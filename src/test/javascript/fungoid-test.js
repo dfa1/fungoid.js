@@ -3,18 +3,29 @@
 describe("fungoid", function() {
 
 	describe("map", function() {
-		it('map array', function() {
-			var input = [ 1, 2, 3 ];
+		it('one item', function() {
+			var input = [ 1 ];
 			var output = [];
 			Fungoid.transform(
 				Fungoid.array_input_iterator(input),
 				Fungoid.map(function(x) { return x + 1; }),
 				Fungoid.array_output_iterator(output)
 				);
-			expect(output).toEqual([ 2, 3, 4]);
+			expect(output).toEqual([ 2 ]);
 		});
 
-		it('map empty array', function() {
+		it('two items', function() {
+			var input = [ 1, 2 ];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.map(function(x) { return x + 1; }),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([ 2, 3 ]);
+		});
+
+		it('zero items', function() {
 			var input = [];
 			var output = [];
 			Fungoid.transform(
@@ -24,30 +35,56 @@ describe("fungoid", function() {
 				);
 			expect(output).toEqual([]);
 		});
+
 	});
 
 	describe("filter", function() {
-		it('filter array', function() {
-			var input = [ 1, 2, 3 ];
+
+		it('accept one item', function() {
+			var input = [ 2 ];
 			var output = [];
 			Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.filter(function(x) { return x % 2; }),
+				Fungoid.filter(function(x) { return x % 2 == 0; }),
 				Fungoid.array_output_iterator(output)
 				);
-			expect(output).toEqual([ 1, 3 ]);
+			expect(output).toEqual([ 2 ]);
 		});
 
-		it('filter empty array', function() {
-			var input = [];
+		it('discard one item', function() {
+			var input = [ 1 ];
 			var output = [];
 			Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.filter(function(x) { return x % 2; }),
+				Fungoid.filter(function(x) { return x % 2 == 0; }),
 				Fungoid.array_output_iterator(output)
 				);
 			expect(output).toEqual([]);
 		});
+
+
+		it('discard all', function() {
+			var input = [ 1, 2, 3];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.filter(function(x) { return x > 4; }),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([]);
+		});
+
+		it('accept all', function() {
+			var input = [ 1, 2, 3];
+			var output = [];
+			Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.filter(function(x) { return x < 4; }),
+				Fungoid.array_output_iterator(output)
+				);
+			expect(output).toEqual([ 1, 2, 3]);
+		});
+
 	});
 
 	describe("drop", function() {
