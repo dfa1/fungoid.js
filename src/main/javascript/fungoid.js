@@ -1,4 +1,3 @@
-'use strict';
 
 // Objectives:
 // - decoupling transformations from input and output
@@ -9,72 +8,73 @@
 // - map, filter, reduce, take, drop, takeWhile, dropWhile, dedup
 // - no external dependencies
 
-var Fungoid = {
+var Fungoid = (function() {
+	'use strict';
 
 	// ES6-like iterator protocol
-	done: function() {
+	function done() {
 		return { done: true };
-	},
+	}
 
-	value: function(e) {
+	function value(e) {
 		return { done: false, value: e };
-	},
+	}
 
 	// [from, to)
-	range_input_iterator: function(from, to) {
+	function range_input_iterator(from, to) {
 		var i = from;
 		return function() {
 			if (i < to) {
-				return Fungoid.value(i++);
+				return value(i++);
 			} else {
-				return Fungoid.done();
+				return done();
 			}
 		};
-	},
+	}
 
-	array_input_iterator: function(array) {
+	function array_input_iterator(array) {
 		var i = 0;
 		return function() {
 			if (i < array.length) {
-				return Fungoid.value(array[i++]);
+				return value(array[i++]);
 			} else {
-				return Fungoid.done();
+				return done();
 			}
 		};
-	},
+	}
 
-	array_output_iterator: function(array) {
+	function array_output_iterator(array) {
 		return function(e) {
 			array.push(e);
 			return array;
 		};
-	},
+	}
 
-	save_output_iterator: function() {
+	function save_output_iterator() {
 		return function(e) {
 			return e;
 		};
-	},
+	}
 
-	identity: function() {
+	function identity() {
 		return function(e) {
 			return { accepted: true, value: e };
 		};
-	},
+	}
 
-	map: function(fn) {
+	function map(fn) {
 		return function(e) {
 			return { accepted: true, value: fn(e) };
 		};
-	},
+	}
 
-	filter: function(fn) {
+	function filter(fn) {
 		return function(e) {
 			return { accepted: fn(e), value: e };
 		};
-	},
+	}
 
-	take: function(n) {
+	function take(n) {
 		if (n < 0) {
 			throw new Error("n cannot be negative: " + n);
 		}
@@ -87,9 +87,9 @@ var Fungoid = {
 				return { done: true };
 			}
 		};
-	},
+	}
 
-	drop: function(n) {
+	function drop(n) {
 		if (n < 0) {
 			throw new Error("n cannot be negative: " + n);
 		}
@@ -97,9 +97,9 @@ var Fungoid = {
 		return function(e) {
 			return { accepted: i++ >= n, value: e };
 		};
-	},
+	}
 
-	reduce: function(fn) {
+	function reduce(fn) {
 		var value;
 		var hasInit = false;
 		return function(e) {
@@ -112,10 +112,10 @@ var Fungoid = {
 				return { accepted: true, value: e };
 			}
 		};
-	},
+	}
 
 	// compose(f,g,h) -> h(g(f(item)))
-	compose: function() {
+	function compose() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
 			var prev = e;
@@ -132,9 +132,9 @@ var Fungoid = {
 			}
 			return { accepted: true, value: prev };
 		};
-	},
+	}
 
-	transform: function(input, fn, output) {
+	function transform(input, fn, output) {
 		var res;
 		for (;;) {
 			var it = input();
@@ -151,4 +151,26 @@ var Fungoid = {
 		}
 		return res;
 	}
-};
+
+	var public_api = {
+
+		// input/output iterators
+		range_input_iterator: range_input_iterator,
+		array_input_iterator: array_input_iterator,
+		array_output_iterator: array_output_iterator,
+		save_output_iterator: save_output_iterator,
+
+		// transformations
+		identity: identity,
+		map: map,
+		filter: filter,
+		take: take,
+		drop: drop,
+		reduce: reduce,
+		compose: compose,
+
+		// low-level API
+		transform: transform
+	};
+	return public_api;
+})();
