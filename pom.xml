@@ -4,7 +4,7 @@
 	<groupId>fungoid</groupId>
 	<artifactId>fungoid</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<build>
 		<plugins>
 			<plugin>
@@ -19,7 +19,6 @@
 					</execution>
 				</executions>
 				<configuration>
-					<autoRefreshInterval>1</autoRefreshInterval>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -38,6 +37,22 @@
 					<sourceJsFolder>src/main/javascript</sourceJsFolder>
 					<!-- annoying options -->
 					<allowOneVarStatementPerFunction>false</allowOneVarStatementPerFunction>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.github.timurstrekalov</groupId>
+				<artifactId>saga-maven-plugin</artifactId>
+				<version>1.4.0</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>coverage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<baseDir>http://localhost:8234</baseDir>
+					<outputDir>target/coverage</outputDir>
 				</configuration>
 			</plugin>
 		</plugins>
