@@ -5,7 +5,7 @@
 //     output is a function that when called procedes a side effect (i.e. push() into an array)
 //     transformations as reusable and unit-testable functions
 // - no intermediate allocations unlike underscore.js, lodash, etc
-// - map, filter, reduce, take, drop, takeWhile, dropWhile, dedup
+// - map, filter, reduce, take, drop, distinct
 // - no external dependencies
 
 var Fungoid = (function() {
@@ -114,6 +114,18 @@ var Fungoid = (function() {
 		};
 	}
 
+	function distinct() {
+		var seen = {};
+		return function(e) {
+			if (seen.hasOwnProperty(e)) {
+				return { accepted: false, value: e };
+			} else {
+				seen[e] = true;
+				return { accepted: true, value: e };
+			}
+		};
+	}
+
 	// compose(f,g,h) -> h(g(f(item)))
 	function compose() {
 		var fns = Array.prototype.slice.call(arguments);
@@ -168,6 +180,7 @@ var Fungoid = (function() {
 		take: take,
 		drop: drop,
 		reduce: reduce,
+		distinct: distinct,
 		compose: compose,
 
 		// low-level API

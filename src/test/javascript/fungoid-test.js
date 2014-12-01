@@ -1,5 +1,6 @@
 'use strict';
 
+// warning: test are not written in BDD style
 describe("fungoid", function() {
 
 	describe("map", function() {
@@ -260,6 +261,53 @@ describe("fungoid", function() {
 			);
 			expect(max).toEqual(12);
 		});
+	});
+
+	describe("distinct", function() {
+		it('one item', function() {
+			var input = [ 1 ] ;
+			var output = [];
+			var max = Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.distinct(),
+				Fungoid.array_output_iterator(output)
+			);
+			expect(output).toEqual([ 1 ]);
+		});
+
+		it('two equivalent items', function() {
+			var input = [ 1, 1 ] ;
+			var output = [];
+			var max = Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.distinct(),
+				Fungoid.array_output_iterator(output)
+			);
+			expect(output).toEqual([ 1 ]);
+		});
+
+		it('two distinct items', function() {
+			var input = [ 1, 2 ] ;
+			var output = [];
+			var max = Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.distinct(),
+				Fungoid.array_output_iterator(output)
+			);
+			expect(output).toEqual([ 1, 2 ]);
+		});
+
+		it('non consecutive equivalent items', function() {
+			var input = [ 1, 2, 1 ] ;
+			var output = [];
+			var max = Fungoid.transform(
+				Fungoid.array_input_iterator(input),
+				Fungoid.distinct(),
+				Fungoid.array_output_iterator(output)
+			);
+			expect(output).toEqual([ 1, 2 ]);
+		});
+
 	});
 
 	describe("compose", function() {
