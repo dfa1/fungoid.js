@@ -56,7 +56,7 @@ var Fungoid = {
 		};
 	},
 
-	identity: function(fn) {
+	identity: function() {
 		return function(e) {
 			return { accepted: true, value: e };
 		};
