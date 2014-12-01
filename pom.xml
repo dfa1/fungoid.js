@@ -19,9 +19,28 @@
 					</execution>
 				</executions>
 				<configuration>
-				<autoRefreshInterval>1</autoRefreshInterval>
+					<autoRefreshInterval>1</autoRefreshInterval>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jslint-maven-plugin</artifactId>
+				<version>1.0.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jslint</goal>
+							<goal>test-jslint</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<sourceJsFolder>src/main/javascript</sourceJsFolder>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 </project>
