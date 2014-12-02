@@ -20,26 +20,34 @@ var Fungoid = (function() {
 		return { done: false, value: e };
 	}
 
+	// ES6-like iterator
 	// [from, to)
 	function range_input_iterator(from, to) {
 		var i = from;
-		return function() {
+		function next() {
 			if (i < to) {
 				return value(i++);
 			} else {
 				return done();
 			}
+		}
+		return {
+			next: next
 		};
 	}
 
+	// ES6-like iterator
 	function array_input_iterator(array) {
 		var i = 0;
-		return function() {
+		function next() {
 			if (i < array.length) {
 				return value(array[i++]);
 			} else {
 				return done();
 			}
+		}
+		return {
+			next: next
 		};
 	}
 
@@ -150,7 +158,7 @@ var Fungoid = (function() {
 	function transform(input, fn, output) {
 		var res;
 		for (;;) {
-			var it = input();
+			var it = input.next();
 			if (it.done) {
 				break;
 			}
