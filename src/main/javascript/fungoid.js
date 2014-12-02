@@ -51,18 +51,37 @@ var Fungoid = (function() {
 		};
 	}
 
-	function array_output_iterator(array) {
-		return function(e) {
-			array.push(e);
-			return array;
+	// output protocol
+	// step(value)   zero or more times
+	// result()      called once
+
+	// append to array
+	function appending_array_output(array) {
+		var state = array || [];
+		return {
+			step:   function(value) { state.push(value); },
+			result: function()      { return state; }
 		};
 	}
 
-	function save_output_iterator() {
-		return function(e) {
-			return e;
+	// keep only the last step() value
+	// if step() is never called throws
+	function keeplast_output() {
+		var guard = {};
+		var state = guard;
+		return {
+			step: function(value)    { state = value; },
+			result: function() {
+				if (state === guard) {
+					throw new Error("step() never called");
+				}
+				return state;
+			}
 		};
 	}
+	// TODO: prepending_array_output
+	// TODO: group_by
+	// TODO: keeplast_or_default
 
 	function identity() {
 		return function(e) {
@@ -156,7 +175,6 @@ var Fungoid = (function() {
 	}
 
 	function transform(input, fn, output) {
-		var res;
 		for (;;) {
 			var it = input.next();
 			if (it.done) {
@@ -167,10 +185,10 @@ var Fungoid = (function() {
 				break;
 			}
 			if (outcome.accepted) {
-				res = output(outcome.value);
+				output.step(outcome.value);
 			}
 		}
-		return res;
+		return output.result();
 	}
 
 	var public_api = {
@@ -178,8 +196,8 @@ var Fungoid = (function() {
 		// input/output iterators
 		range_input_iterator: range_input_iterator,
 		array_input_iterator: array_input_iterator,
-		array_output_iterator: array_output_iterator,
-		save_output_iterator: save_output_iterator,
+		appending_array_output: appending_array_output,
+		keeplast_output: keeplast_output,
 
 		// transformations
 		identity: identity,
