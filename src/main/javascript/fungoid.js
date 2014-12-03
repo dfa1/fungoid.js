@@ -79,8 +79,24 @@ var Fungoid = (function() {
 			}
 		};
 	}
+
+	function group_by(fn) {
+		var groups = {};
+		return {
+			step:   function(value) {
+				var key = fn(value);
+				if (!groups[key]) {
+					groups[key]= [];
+				}
+				groups[key].push(value);
+			},
+			result: function() {
+				return groups;
+			}
+		};
+	}
+
 	// TODO: prepending_array_output
-	// TODO: group_by
 	// TODO: keeplast_or_default
 
 	function identity() {
@@ -198,6 +214,7 @@ var Fungoid = (function() {
 		array_input_iterator: array_input_iterator,
 		appending_array_output: appending_array_output,
 		keeplast_output: keeplast_output,
+		group_by: group_by,
 
 		// transformations
 		identity: identity,

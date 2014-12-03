@@ -332,6 +332,20 @@ describe("fungoid", function() {
 		});
 	});
 
+
+	describe("demos", function() {
+
+		it("even_or_odd", function() {
+			var output = Fungoid.transform(
+				Fungoid.range_input_iterator(1, 5),
+				Fungoid.identity(),
+				Fungoid.group_by(function(e) { return e % 2 ? "odd" : "even" })
+				);
+			expect(output).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
+		});
+
+	});
+
 	describe("stress tests", function() {
 
 		it("filter->map many items", function() {
@@ -346,6 +360,8 @@ describe("fungoid", function() {
 				);
 			expect(output).toEqual([ "100000", "200000", "300000", "400000" ]);
 		});
+
+
 
 	});
 
