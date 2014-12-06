@@ -8,7 +8,7 @@ describe("fungoid", function() {
 			var input = [ 1 ];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.map(function(x) { return x + 1; }),
+				Fungoid.map(function(e) { return e + 1; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([ 2 ]);
@@ -18,7 +18,7 @@ describe("fungoid", function() {
 			var input = [ 1, 2 ];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.map(function(x) { return x + 1; }),
+				Fungoid.map(function(e) { return e + 1; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([ 2, 3 ]);
@@ -28,7 +28,7 @@ describe("fungoid", function() {
 			var input = [];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.map(function(x) { return x + 1; }),
+				Fungoid.map(function(e) { return e + 1; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([]);
@@ -42,7 +42,7 @@ describe("fungoid", function() {
 			var input = [ 2 ];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.filter(function(x) { return x % 2 === 0; }),
+				Fungoid.filter(function(e) { return e % 2 === 0; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([ 2 ]);
@@ -52,7 +52,7 @@ describe("fungoid", function() {
 			var input = [ 1 ];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.filter(function(x) { return x % 2 === 0; }),
+				Fungoid.filter(function(e) { return e % 2 === 0; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([]);
@@ -63,7 +63,7 @@ describe("fungoid", function() {
 			var input = [ 1, 2, 3 ];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.filter(function(x) { return x > 4; }),
+				Fungoid.filter(function(e) { return e > 4; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([]);
@@ -73,7 +73,7 @@ describe("fungoid", function() {
 			var input = [ 1, 2, 3 ];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.filter(function(x) { return x < 4; }),
+				Fungoid.filter(function(e) { return e < 4; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([ 1, 2, 3]);
@@ -315,7 +315,7 @@ describe("fungoid", function() {
 		it("accepted by all steps", function() {
 			var fn = Fungoid.compose(
 				Fungoid.filter(function(e) { return e === 1; }),
-				Fungoid.map(function(e) { return "" + e; })
+				Fungoid.map(function(e) { return String(e); })
 			);
 			var outcome = fn(1);
 			expect(outcome.value).toEqual("1");
