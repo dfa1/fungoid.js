@@ -398,6 +398,34 @@ describe("fungoid", function() {
 			expect(output).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
 		});
 
+		it("fizzbuzz with named_juxt", function() {
+			var output = Fungoid.transform(
+				Fungoid.range_input_iterator(1, 21),
+				Fungoid.compose(
+					Fungoid.named_juxt({ 
+						untouched: Fungoid.identity(), 
+						fizz:  Fungoid.filter(function(e) { return e % 3 === 0; }),
+						buzz:  Fungoid.filter(function(e) { return e % 5 === 0; }),
+					}),
+					Fungoid.map(function(e) {
+						if (e.fizz && e.buzz) {
+							return "fizzbuzz";
+						}
+						if (e.fizz) {
+							return "fizz";
+						}
+						if (e.buzz) {
+							return "buzz";
+						}
+						return e.untouched;
+					}
+					)
+				),
+				Fungoid.appending_array_output()
+				);
+			expect(output).toEqual([ 1, 2, "fizz", 4, "buzz", "fizz", 7, 8, "fizz", "buzz", 11, "fizz", 13, 14, "fizzbuzz", 16, 17, "fizz", 19, "buzz" ]);
+		});
+
 	});
 
 	describe("stress tests", function() {
