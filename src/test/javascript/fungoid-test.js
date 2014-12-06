@@ -430,20 +430,20 @@ describe("fungoid", function() {
 
 	describe("stress tests", function() {
 
-		it("filter->map many items", function() {
+		var n = 10E5;
+
+		it("filter->map " + n + " items", function() {
 			var fn = Fungoid.compose(
-				Fungoid.filter(function(e) { return e % 100000 === 0; }),
+				Fungoid.filter(function(e) { return e % n === 0; }),
 				Fungoid.map(function(e) { return String(e); })
 			);
 			var output = Fungoid.transform(
-				Fungoid.range_input_iterator(1, 500000),
+				Fungoid.range_input_iterator(1, n + 1),
 				fn,
 				Fungoid.appending_array_output()
 				);
-			expect(output).toEqual([ "100000", "200000", "300000", "400000" ]);
+			expect(output).toEqual([ String(n) ]);
 		});
-
-
 
 	});
 
