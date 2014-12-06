@@ -116,6 +116,7 @@ var Fungoid = (function() {
 		};
 	}
 
+	// TODO: state pattern
 	function take(n) {
 		if (n < 0) {
 			throw new Error("n cannot be negative: " + n);
@@ -131,6 +132,7 @@ var Fungoid = (function() {
 		};
 	}
 
+	// TODO: state pattern
 	function drop(n) {
 		if (n < 0) {
 			throw new Error("n cannot be negative: " + n);
