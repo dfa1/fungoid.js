@@ -22,21 +22,24 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jslint-maven-plugin</artifactId>
-				<version>1.0.1</version>
+				<groupId>com.cj.jshintmojo</groupId>
+				<artifactId>jshint-maven-plugin</artifactId>
+				<version>1.3.0</version>
 				<executions>
 					<execution>
 						<goals>
-							<goal>jslint</goal>
-							<goal>test-jslint</goal>
+							<goal>lint</goal>
 						</goals>
 					</execution>
 				</executions>
 				<configuration>
-					<sourceJsFolder>src/main/javascript</sourceJsFolder>
-					<!-- annoying options -->
-					<allowOneVarStatementPerFunction>false</allowOneVarStatementPerFunction>
+					<version>2.4.1</version>
+					<globals>Fungoid,describe,it,expect</globals>
+					<options>strict,curly,eqeqeq,noarg,undef,unused</options>
+					<directories>
+						<directory>src/main/javascript</directory>
+						<directory>src/test/javascript</directory>
+					</directories>
 				</configuration>
 			</plugin>
 			<plugin>

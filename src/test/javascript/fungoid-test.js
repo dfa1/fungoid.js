@@ -1,7 +1,6 @@
-'use strict';
-
-// warning: test are not written in BDD style
+// warning: these tests are not written in BDD style
 describe("fungoid", function() {
+	'use strict';
 
 	describe("map", function() {
 
@@ -43,7 +42,7 @@ describe("fungoid", function() {
 			var input = [ 2 ];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.filter(function(x) { return x % 2 == 0; }),
+				Fungoid.filter(function(x) { return x % 2 === 0; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([ 2 ]);
@@ -53,7 +52,7 @@ describe("fungoid", function() {
 			var input = [ 1 ];
 			var output = Fungoid.transform(
 				Fungoid.array_input_iterator(input),
-				Fungoid.filter(function(x) { return x % 2 == 0; }),
+				Fungoid.filter(function(x) { return x % 2 === 0; }),
 				Fungoid.appending_array_output()
 			);
 			expect(output).toEqual([]);
@@ -206,7 +205,7 @@ describe("fungoid", function() {
 				Fungoid.take(5),
 				Fungoid.map(function(e) { count++; return e; })
 			);
-			var output = Fungoid.transform(
+			Fungoid.transform(
 				Fungoid.range_input_iterator(1, 50),
 				fn,
 				Fungoid.appending_array_output()
@@ -306,7 +305,7 @@ describe("fungoid", function() {
 
 		it("first function discards", function() {
 			var fn = Fungoid.compose(
-				Fungoid.filter(function(e) { return e == 2; }),
+				Fungoid.filter(function(e) { return e === 2; }),
 				Fungoid.identity()
 			);
 			var outcome = fn(1);
@@ -315,7 +314,7 @@ describe("fungoid", function() {
 
 		it("accepted by all steps", function() {
 			var fn = Fungoid.compose(
-				Fungoid.filter(function(e) { return e == 1; }),
+				Fungoid.filter(function(e) { return e === 1; }),
 				Fungoid.map(function(e) { return "" + e; })
 			);
 			var outcome = fn(1);
@@ -339,7 +338,7 @@ describe("fungoid", function() {
 			var output = Fungoid.transform(
 				Fungoid.range_input_iterator(1, 5),
 				Fungoid.identity(),
-				Fungoid.group_by(function(e) { return e % 2 ? "odd" : "even" })
+				Fungoid.group_by(function(e) { return e % 2 ? "odd" : "even"; })
 				);
 			expect(output).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
 		});
@@ -350,8 +349,8 @@ describe("fungoid", function() {
 
 		it("filter->map many items", function() {
 			var fn = Fungoid.compose(
-				Fungoid.filter(function(e) { return e % 100000 == 0; }),
-				Fungoid.map(function(e) { return "" + e; })
+				Fungoid.filter(function(e) { return e % 100000 === 0; }),
+				Fungoid.map(function(e) { return String(e); })
 			);
 			var output = Fungoid.transform(
 				Fungoid.range_input_iterator(1, 500000),
