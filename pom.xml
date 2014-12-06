@@ -55,30 +55,6 @@
 					<outputDir>target/coverage</outputDir>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>com.samaxes.maven</groupId>
-				<artifactId>minify-maven-plugin</artifactId>
-				<version>1.7.4</version>
-				<configuration>
-					<jsEngine>CLOSURE</jsEngine>
-					<webappSourceDir>src/main</webappSourceDir>
-					<jsSourceDir>javascript</jsSourceDir>
-					<jsFinalFile>fungoid-${project.version}.js</jsFinalFile>
-				</configuration>
-				<executions>
-					<execution>
-						<id>default-minify</id>
-						<configuration>
-							<jsSourceIncludes>
-								<jsSourceInclude>**</jsSourceInclude>
-							</jsSourceIncludes>
-						</configuration>
-						<goals>
-							<goal>minify</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 	</build>
 	<properties>
