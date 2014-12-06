@@ -331,8 +331,63 @@ describe("fungoid", function() {
 		});
 	});
 
+	describe("juxt", function() {
 
-	describe("demos", function() {
+		it("zero functions", function() {
+			var outcome = Fungoid.juxt()(1);
+			expect(outcome).toEqual({ accepted: true, value: [ ]});
+		});
+
+		it("one function", function() {
+			var inc = Fungoid.map(function(e) { return e + 1; });
+			var outcome = Fungoid.juxt(inc)(1);
+			expect(outcome).toEqual({ accepted: true, value: [ 2 ]});
+		});
+
+		it("two functions", function() {
+			var inc = Fungoid.map(function(e) { return e + 1; });
+			var dec = Fungoid.map(function(e) { return e - 1; });
+			var outcome = Fungoid.juxt(inc, dec)(1);
+			expect(outcome).toEqual({ accepted: true, value: [ 2, 0 ]});
+		});
+
+		it("with rejected value", function() {
+			var fn = Fungoid.filter(function(e) { return e !== 1; });
+			var outcome = Fungoid.juxt(fn)(1);
+			expect(outcome).toEqual({ accepted: true, value: [ undefined ]});
+		});
+
+	});
+
+	describe("named_juxt", function() {
+
+		it("zero functions", function() {
+			var outcome = Fungoid.named_juxt()(1);
+			expect(outcome).toEqual({ accepted: true, value: {}});
+		});
+
+		it("one function", function() {
+			var inc = Fungoid.map(function(e) { return e + 1; });
+			var outcome = Fungoid.named_juxt({next: inc})(1);
+			expect(outcome).toEqual({ accepted: true, value: { next: 2 }});
+		});
+
+		it("two functions", function() {
+			var inc = Fungoid.map(function(e) { return e + 1; });
+			var dec = Fungoid.map(function(e) { return e - 1; });
+			var outcome = Fungoid.named_juxt({ next: inc, prev: dec })(1);
+			expect(outcome).toEqual({ accepted: true, value: { next: 2, prev: 0} });
+		});
+
+		it("one function", function() {
+			var fn = Fungoid.filter(function(e) { return e !== 1; });
+			var outcome = Fungoid.named_juxt({ next: fn })(1);
+			expect(outcome).toEqual({ accepted: true, value: { next: undefined }});
+		});
+
+	});
+
+	describe("demo", function() {
 
 		it("even_or_odd", function() {
 			var output = Fungoid.transform(

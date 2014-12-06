@@ -1,4 +1,3 @@
-
 // Objectives:
 // - decoupling transformations from input and output
 //     input is a function that when called produces one value
@@ -169,7 +168,10 @@ var Fungoid = (function() {
 		};
 	}
 
-	// compose(f,g,h) -> h(g(f(item)))
+	// compositions
+
+	// TODO: maybe pipeline is a better name?
+	// compose(f,g,h)(x) -> h(g(f(x)))
 	function compose() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
@@ -190,6 +192,45 @@ var Fungoid = (function() {
 		};
 	}
 
+	// juxt(f,g,h)(x) -> [f(x),g(x),h(x)]
+	// TODO: handle done
+	function juxt() {
+		var fns = Array.prototype.slice.call(arguments);
+		return function(e) {
+			var res = [];
+			for (var i = 0; i < fns.length; i++) {
+				var fn = fns[i];
+				var outcome = fn(e);
+				if (outcome.accepted) {
+					res.push(outcome.value);
+				} else {
+					res.push(undefined); // TODO: don't leave a hole in the array
+				}
+			}
+			return { accepted: true, value: res };
+		};
+	}
+
+	// named_juxt({a:f,b:g,c:h})(x) -> {a:f(x),b:g(x),c:h(x)}
+	// just a shortand for juxt + map
+	// TODO: handle done
+	function named_juxt(fns) {
+		return function(e) {
+			var res = {};
+			for (var k in fns) {
+				if (fns.hasOwnProperty(k)) {
+					var fn = fns[k];
+					var outcome = fn(e);
+					if (outcome.accepted) {
+						res[k] = outcome.value;
+					}
+				}
+			}
+			return { accepted: true, value: res };
+		};
+	}
+
+	// algorithms
 	function transform(input, fn, output) {
 		for (;;) {
 			var it = input.next();
@@ -225,9 +266,12 @@ var Fungoid = (function() {
 		reduce: reduce,
 		distinct: distinct,
 		compose: compose,
+		juxt: juxt,
+		named_juxt: named_juxt,
 
-		// low-level API
+		// algorithms
 		transform: transform
+
 	};
 	return public_api;
 }());
