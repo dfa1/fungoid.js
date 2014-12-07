@@ -2,6 +2,30 @@
 describe("fungoid", function() {
 	'use strict';
 
+	describe("object iterator", function() {
+		
+		it("on empty input", function() {
+			var input = {};
+			var it = Fungoid.object_input_iterator(input);
+			expect(it.next()).toEqual({ done: true });
+		});
+
+		it("with one property", function() {
+			var input = { name: 'Jack' };
+			var it = Fungoid.object_input_iterator(input);
+			expect(it.next()).toEqual({ done: false, value: [ 'name', 'Jack' ] });
+			expect(it.next()).toEqual({ done: true });
+		});
+
+		it("terminates", function() {
+			var input = { name: 'Jack' };
+			var it = Fungoid.object_input_iterator(input);
+			it.next(); // ignoring return value
+			expect(it.next()).toEqual({ done: true });
+		});
+
+	});
+
 	describe("map", function() {
 
 		it('one item', function() {
@@ -362,7 +386,7 @@ describe("fungoid", function() {
 	describe("named_juxt", function() {
 
 		it("zero functions", function() {
-			var outcome = Fungoid.named_juxt()(1);
+			var outcome = Fungoid.named_juxt({})(1);
 			expect(outcome).toEqual({ accepted: true, value: {}});
 		});
 

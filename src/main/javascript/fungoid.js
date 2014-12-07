@@ -6,6 +6,10 @@
 // - no intermediate allocations unlike underscore.js, lodash, etc
 // - map, filter, reduce, take, drop, distinct
 // - no external dependencies
+//
+// Assumptions:
+// - Object.create
+
 
 /* exported Fungoid */
 var Fungoid = (function() {
@@ -21,7 +25,7 @@ var Fungoid = (function() {
 	}
 
 	// ES6-like iterator
-	// [from, to)
+	// yields numbers in range [from, to)
 	function range_input_iterator(from, to) {
 		var i = from;
 		function next() {
@@ -37,11 +41,32 @@ var Fungoid = (function() {
 	}
 
 	// ES6-like iterator
+	// yields array[i]
 	function array_input_iterator(array) {
 		var i = 0;
 		function next() {
 			if (i < array.length) {
 				return value(array[i++]);
+			} else {
+				return done();
+			}
+		}
+		return {
+			next: next
+		};
+	}
+
+	// ES6-like iterator
+	// yields [k, object[k]]
+	function object_input_iterator(object) {
+		var i = 0;
+		var keys = Object.keys(object);
+		function next() {
+			if (i < keys.length) {
+				var k = keys[i];
+				var v = object[k];
+				i += 1;
+				return value([k, v]);
 			} else {
 				return done();
 			}
@@ -217,15 +242,15 @@ var Fungoid = (function() {
 	// just a shortand for juxt + map
 	// TODO: handle done
 	function named_juxt(fns) {
+		var keys = Object.keys(fns);
 		return function(e) {
 			var res = {};
-			for (var k in fns) {
-				if (fns.hasOwnProperty(k)) {
-					var fn = fns[k];
-					var outcome = fn(e);
-					if (outcome.accepted) {
-						res[k] = outcome.value;
-					}
+			for (var i = 0; i < keys.length; i++) {
+				var k = keys[i];
+				var fn = fns[k];
+				var outcome = fn(e);
+				if (outcome.accepted) {
+					res[k] = outcome.value;
 				}
 			}
 			return { accepted: true, value: res };
@@ -252,9 +277,12 @@ var Fungoid = (function() {
 
 	var public_api = {
 
-		// input/output iterators
+		// input iterators
 		range_input_iterator: range_input_iterator,
 		array_input_iterator: array_input_iterator,
+		object_input_iterator: object_input_iterator,
+
+		// output
 		appending_array_output: appending_array_output,
 		keeplast_output: keeplast_output,
 		group_by: group_by,
