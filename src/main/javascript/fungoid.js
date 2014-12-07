@@ -1,15 +1,13 @@
 // Objectives:
 // - decoupling transformations from input and output
-//     input is a function that when called produces one value
-//     output is a function that when called procedes a side effect (i.e. push() into an array)
-//     transformations as reusable and unit-testable functions
-// - no intermediate allocations unlike underscore.js, lodash, etc
-// - map, filter, reduce, take, drop, distinct
-// - no external dependencies
+//     transformations are composable and unit-testable functions such as map(), filter(), reduce(), take(), drop(), etc
+//     input can be any ES6-like iterator, the library provides some basic iterators
+//     output can be arrays, objects, pure side effect (i.e. console.log())
+// - no intermediate allocations, unlike other libraries
 //
 // Assumptions:
-// - Object.create
-
+// - no library dependencies
+// - Object.keys()
 
 /* exported Fungoid */
 var Fungoid = (function() {
