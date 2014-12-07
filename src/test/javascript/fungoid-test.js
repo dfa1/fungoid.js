@@ -266,7 +266,7 @@ describe("fungoid", function() {
 			var count = 0 ;
 			var fn = Fungoid.compose(
 				Fungoid.take(5),
-				Fungoid.map(function(e) { count++; return e; })
+				Fungoid.map(function(e) { count += 1; return e; })
 			);
 			Fungoid.transform(
 				Fungoid.range_input_iterator(1, 50),

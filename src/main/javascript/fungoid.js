@@ -50,7 +50,9 @@ var Fungoid = (function() {
 		var i = 0;
 		function next() {
 			if (i < array.length) {
-				return value(array[i++]);
+				var r = array[i];
+				i += 1;
+				return value(r);
 			} else {
 				return done();
 			}
@@ -153,7 +155,8 @@ var Fungoid = (function() {
 		}
 		var i = n;
 		return function(e) {
-			var accepted = i-- > 0;
+			var accepted = i > 0;
+			i -= 1;
 			if (accepted) {
 				return { accepted: true, value: e };
 			} else {
@@ -169,7 +172,9 @@ var Fungoid = (function() {
 		}
 		var i = 0;
 		return function(e) {
-			return { accepted: i++ >= n, value: e };
+			var accepted = i >= n;
+			i += 1;
+			return { accepted: accepted, value: e };
 		};
 	}
 
@@ -208,7 +213,7 @@ var Fungoid = (function() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
 			var prev = e;
-			for (var i = 0; i < fns.length; i++) {
+			for (var i = 0; i < fns.length; i += 1) {
 				var fn = fns[i];
 				var outcome = fn(prev);
 				if (outcome.done) {
@@ -229,7 +234,7 @@ var Fungoid = (function() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
 			var res = [];
-			for (var i = 0; i < fns.length; i++) {
+			for (var i = 0; i < fns.length; i += 1) {
 				var fn = fns[i];
 				var outcome = fn(e);
 				if (outcome.accepted) {
@@ -249,7 +254,7 @@ var Fungoid = (function() {
 		var keys = Object.keys(fns);
 		return function(e) {
 			var res = {};
-			for (var i = 0; i < keys.length; i++) {
+			for (var i = 0; i < keys.length; i += 1) {
 				var k = keys[i];
 				var fn = fns[k];
 				var outcome = fn(e);
