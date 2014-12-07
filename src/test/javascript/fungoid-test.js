@@ -17,11 +17,50 @@ describe("fungoid", function() {
 			expect(it.next()).toEqual({ done: true });
 		});
 
-		it("terminates", function() {
+		it("terminates after last key", function() {
 			var input = { name: 'Jack' };
 			var it = Fungoid.object_input_iterator(input);
 			it.next(); // ignoring return value
 			expect(it.next()).toEqual({ done: true });
+		});
+
+	});
+
+	describe("range iterator", function() {
+
+		it("on empty input", function() {
+			var it = Fungoid.range_input_iterator(1, 1);
+			expect(it.next()).toEqual({ done: true });
+		});
+
+		it("with one element", function() {
+			var it = Fungoid.range_input_iterator(0, 1);
+			expect(it.next()).toEqual({ done: false, value: 0 });
+		});
+
+		it("terminates after last element", function() {
+			var it = Fungoid.range_input_iterator(0, 1);
+			it.next();
+			expect(it.next()).toEqual({ done: true });
+		});
+
+		it("from > to", function() {
+			var it = Fungoid.range_input_iterator(1, 0);
+			expect(it.next()).toEqual({ done: true });
+		});
+
+		it("step defaults to 1, if not specified", function() {
+			var it = Fungoid.range_input_iterator(0, 2);
+			var first = it.next();
+			var second = it.next();
+			expect(second.value - first.value).toEqual(1);
+		});
+
+		it("with custom step", function() {
+			var it = Fungoid.range_input_iterator(0, 3, 2);
+			var first = it.next();
+			var second = it.next();
+			expect(second.value - first.value).toEqual(2);
 		});
 
 	});
@@ -238,19 +277,6 @@ describe("fungoid", function() {
 		});
 	});
 
-	describe("range", function() {
-
-		it('range->array', function() {
-			var output = Fungoid.transform(
-				Fungoid.range_input_iterator(10, 13),
-				Fungoid.identity(),
-				Fungoid.appending_array_output()
-				);
-			expect(output).toEqual([10, 11, 12]);
-		});
-
-	});
-
 	describe("reduce", function() {
 
 		it('first value is not ignored', function() {
@@ -403,15 +429,24 @@ describe("fungoid", function() {
 			expect(outcome).toEqual({ accepted: true, value: { next: 2, prev: 0} });
 		});
 
-		it("one function", function() {
+		it("puts undefined on discarded value by key", function() {
 			var fn = Fungoid.filter(function(e) { return e !== 1; });
-			var outcome = Fungoid.named_juxt({ next: fn })(1);
-			expect(outcome).toEqual({ accepted: true, value: { next: undefined }});
+			var outcome = Fungoid.named_juxt({ age: fn })(1);
+			expect(outcome).toEqual({ accepted: true, value: { age: undefined }});
 		});
 
 	});
 
 	describe("demo", function() {
+
+		it('range to array', function() {
+			var output = Fungoid.transform(
+				Fungoid.range_input_iterator(10, 13),
+				Fungoid.identity(),
+				Fungoid.appending_array_output()
+				);
+			expect(output).toEqual([10, 11, 12]);
+		});
 
 		it("drop_take", function() {
 			var output = Fungoid.transform(
@@ -424,8 +459,6 @@ describe("fungoid", function() {
 				);
 			expect(output).toEqual([ 3 ]);
 		});
-
-
 
 		it("even_or_odd", function() {
 			var output = Fungoid.transform(

@@ -26,11 +26,15 @@ var Fungoid = (function() {
 
 	// ES6-like iterator
 	// yields numbers in range [from, to)
-	function range_input_iterator(from, to) {
+	// step can be omitted, defaults to 1
+	function range_input_iterator(from, to, step) {
+		var s = step || 1;
 		var i = from;
 		function next() {
 			if (i < to) {
-				return value(i++);
+				var r = i;
+				i += s;
+				return value(r);
 			} else {
 				return done();
 			}
