@@ -6,6 +6,7 @@
 // - no intermediate allocations unlike underscore.js, lodash, etc
 // - map, filter, reduce, take, drop, distinct
 // - no external dependencies
+
 /* exported Fungoid */
 var Fungoid = (function() {
 	'use strict';

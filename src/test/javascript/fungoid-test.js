@@ -389,6 +389,20 @@ describe("fungoid", function() {
 
 	describe("demo", function() {
 
+		it("drop_take", function() {
+			var output = Fungoid.transform(
+				Fungoid.range_input_iterator(1, 5),
+				Fungoid.compose(
+					Fungoid.drop(2),
+					Fungoid.take(1)
+				),
+				Fungoid.appending_array_output()
+				);
+			expect(output).toEqual([ 3 ]);
+		});
+
+
+
 		it("even_or_odd", function() {
 			var output = Fungoid.transform(
 				Fungoid.range_input_iterator(1, 5),
