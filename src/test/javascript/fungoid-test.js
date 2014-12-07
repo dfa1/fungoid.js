@@ -2,6 +2,30 @@
 describe("fungoid", function() {
 	'use strict';
 
+	describe("array iterator", function() {
+
+		it("on empty input", function() {
+			var input = [];
+			var it = Fungoid.array_input_iterator(input);
+			expect(it.next()).toEqual({ done: true });
+		});
+
+		it("with one element", function() {
+			var input = [ 1 ];
+			var it = Fungoid.array_input_iterator(input);
+			expect(it.next()).toEqual({ done: false, value: 1 });
+			expect(it.next()).toEqual({ done: true });
+		});
+
+		it("terminates after last element", function() {
+			var input = [ 1 ];
+			var it = Fungoid.array_input_iterator(input);
+			it.next(); // ignoring return value
+			expect(it.next()).toEqual({ done: true });
+		});
+
+	});
+
 	describe("object iterator", function() {
 		
 		it("on empty input", function() {
