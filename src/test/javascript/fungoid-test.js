@@ -288,7 +288,7 @@ describe("fungoid", function() {
 
 		it('short circuit', function() {
 			var count = 0 ;
-			var fn = Fungoid.compose(
+			var fn = Fungoid.pipeline(
 				Fungoid.take(5),
 				Fungoid.map(function(e) { count += 1; return e; })
 			);
@@ -312,6 +312,7 @@ describe("fungoid", function() {
 			);
 			expect(max).toEqual(12);
 		});
+
 		it('last value is not ignored', function() {
 			var input = [ 1, 2, 3, 12 ] ;
 			var max = Fungoid.transform(
@@ -367,41 +368,57 @@ describe("fungoid", function() {
 
 	});
 
-	describe("compose", function() {
+	describe("pipeline", function() {
 
-		it("one function", function() {
-			var fn = Fungoid.compose(
+		it("no steps", function() {
+			var fn = Fungoid.pipeline(
+				/* no steps */
+			);
+			var outcome = fn(1);
+			expect(outcome).toEqual({accepted: true, value: 1});
+		});
+
+		it("one step", function() {
+			var fn = Fungoid.pipeline(
 				Fungoid.identity()
 			);
 			var outcome = fn(1);
-			expect(outcome.accepted).toEqual(true);
+			expect(outcome).toEqual({accepted: true, value: 1});
 		});
 
-		it("first function discards", function() {
-			var fn = Fungoid.compose(
+		it("first step discards", function() {
+			var fn = Fungoid.pipeline(
 				Fungoid.filter(function(e) { return e === 2; }),
 				Fungoid.identity()
 			);
 			var outcome = fn(1);
-			expect(outcome.accepted).toEqual(false);
+			expect(outcome).toEqual({accepted: false, value: 1 });
 		});
 
 		it("accepted by all steps", function() {
-			var fn = Fungoid.compose(
+			var fn = Fungoid.pipeline(
 				Fungoid.filter(function(e) { return e === 1; }),
 				Fungoid.map(function(e) { return String(e); })
 			);
 			var outcome = fn(1);
-			expect(outcome.value).toEqual("1");
+			expect(outcome).toEqual({ accepted: true, value: "1" });
 		});
 
 		it("values flows between one step to another", function() {
-			var fn = Fungoid.compose(
+			var fn = Fungoid.pipeline(
 				Fungoid.map(function(e) { return e + 1; }),
 				Fungoid.map(function(e) { return e - 1; })
 			);
 			var outcome = fn(1);
 			expect(outcome.value).toEqual(1);
+		});
+
+		it("interrupts flow prematurely", function() {
+			var fn = Fungoid.pipeline(
+				Fungoid.take(0)
+			);
+			var outcome = fn(1);
+			expect(outcome).toEqual({done: true});
 		});
 	});
 
@@ -475,7 +492,7 @@ describe("fungoid", function() {
 		it("drop_take", function() {
 			var output = Fungoid.transform(
 				Fungoid.range_input_iterator(1, 5),
-				Fungoid.compose(
+				Fungoid.pipeline(
 					Fungoid.drop(2),
 					Fungoid.take(1)
 				),
@@ -496,7 +513,7 @@ describe("fungoid", function() {
 		it("fizzbuzz with named_juxt", function() {
 			var output = Fungoid.transform(
 				Fungoid.range_input_iterator(1, 21),
-				Fungoid.compose(
+				Fungoid.pipeline(
 					Fungoid.named_juxt({ 
 						untouched: Fungoid.identity(), 
 						fizz:  Fungoid.filter(function(e) { return e % 3 === 0; }),
@@ -528,7 +545,7 @@ describe("fungoid", function() {
 		var n = 10E5;
 
 		it("filter->map " + n + " items", function() {
-			var fn = Fungoid.compose(
+			var fn = Fungoid.pipeline(
 				Fungoid.filter(function(e) { return e % n === 0; }),
 				Fungoid.map(function(e) { return String(e); })
 			);

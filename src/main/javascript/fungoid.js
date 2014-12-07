@@ -205,9 +205,8 @@ var Fungoid = (function() {
 
 	// compositions
 
-	// TODO: maybe pipeline is a better name?
 	// compose(f,g,h)(x) -> h(g(f(x)))
-	function compose() {
+	function pipeline() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
 			var prev = e;
@@ -302,7 +301,7 @@ var Fungoid = (function() {
 		drop: drop,
 		reduce: reduce,
 		distinct: distinct,
-		compose: compose,
+		pipeline: pipeline,
 		juxt: juxt,
 		named_juxt: named_juxt,
 
