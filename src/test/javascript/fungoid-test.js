@@ -27,7 +27,7 @@ describe("fungoid", function() {
 	});
 
 	describe("object iterator", function() {
-		
+
 		it("on empty input", function() {
 			var input = {};
 			var it = Fungoid.object_input_iterator(input);
@@ -144,7 +144,6 @@ describe("fungoid", function() {
 			);
 			expect(output).toEqual([]);
 		});
-
 
 		it('discard all', function() {
 			var input = [ 1, 2, 3 ];
@@ -489,6 +488,15 @@ describe("fungoid", function() {
 			expect(output).toEqual([10, 11, 12]);
 		});
 
+		it('reverse range to array', function() {
+			var output = Fungoid.transform(
+				Fungoid.range_input_iterator(10, 13),
+				Fungoid.identity(),
+				Fungoid.prepending_array_output()
+				);
+			expect(output).toEqual([12, 11, 10]);
+		});
+
 		it("drop_take", function() {
 			var output = Fungoid.transform(
 				Fungoid.range_input_iterator(1, 5),
@@ -514,8 +522,8 @@ describe("fungoid", function() {
 			var output = Fungoid.transform(
 				Fungoid.range_input_iterator(1, 21),
 				Fungoid.pipeline(
-					Fungoid.named_juxt({ 
-						untouched: Fungoid.identity(), 
+					Fungoid.named_juxt({
+						untouched: Fungoid.identity(),
 						fizz:  Fungoid.filter(function(e) { return e % 3 === 0; }),
 						buzz:  Fungoid.filter(function(e) { return e % 5 === 0; }),
 					}),
@@ -536,25 +544,6 @@ describe("fungoid", function() {
 				Fungoid.appending_array_output()
 				);
 			expect(output).toEqual([ 1, 2, "fizz", 4, "buzz", "fizz", 7, 8, "fizz", "buzz", 11, "fizz", 13, 14, "fizzbuzz", 16, 17, "fizz", 19, "buzz" ]);
-		});
-
-	});
-
-	describe("stress tests", function() {
-
-		var n = 10E5;
-
-		it("filter->map " + n + " items", function() {
-			var fn = Fungoid.pipeline(
-				Fungoid.filter(function(e) { return e % n === 0; }),
-				Fungoid.map(function(e) { return String(e); })
-			);
-			var output = Fungoid.transform(
-				Fungoid.range_input_iterator(1, n + 1),
-				fn,
-				Fungoid.appending_array_output()
-				);
-			expect(output).toEqual([ String(n) ]);
 		});
 
 	});

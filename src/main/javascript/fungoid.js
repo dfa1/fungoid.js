@@ -84,7 +84,7 @@ var Fungoid = (function() {
 	// step(value)   zero or more times
 	// result()      called once
 
-	// append to array
+	// push() to array
 	function appending_array_output(array) {
 		var state = array || [];
 		return {
@@ -93,9 +93,18 @@ var Fungoid = (function() {
 		};
 	}
 
+	// unshift() to array
+	function prepending_array_output(array) {
+		var state = array || [];
+		return {
+			step:   function(value) { state.unshift(value); },
+			result: function()      { return state; }
+		};
+	}
+
 	// keep only the last step() value
 	// if step() is never called throws
-	function keeplast_output() {
+	function keeplast_output_safe() {
 		var guard = {};
 		var state = guard;
 		return {
@@ -108,6 +117,19 @@ var Fungoid = (function() {
 			}
 		};
 	}
+
+	// keep only the last step() value
+	// if step() is never called returns ''
+	function keeplast_output(init) {
+		var state = init;
+		return {
+			step: function(value)    { state = value; },
+			result: function() {
+				return state;
+			}
+		};
+	}
+
 
 	function group_by(fn) {
 		var groups = {};
@@ -125,8 +147,6 @@ var Fungoid = (function() {
 		};
 	}
 
-	// TODO: prepending_array_output
-	// TODO: keeplast_or_default
 
 	function identity() {
 		return function(e) {
@@ -205,7 +225,7 @@ var Fungoid = (function() {
 
 	// compositions
 
-	// compose(f,g,h)(x) -> h(g(f(x)))
+	// pipeline(f,g,h)(x) -> h(g(f(x)))
 	function pipeline() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
@@ -226,7 +246,7 @@ var Fungoid = (function() {
 	}
 
 	// juxt(f,g,h)(x) -> [f(x),g(x),h(x)]
-	// TODO: handle done
+	// outcomes with done=true are ignored
 	function juxt() {
 		var fns = Array.prototype.slice.call(arguments);
 		return function(e) {
@@ -246,7 +266,7 @@ var Fungoid = (function() {
 
 	// named_juxt({a:f,b:g,c:h})(x) -> {a:f(x),b:g(x),c:h(x)}
 	// just a shortand for juxt + map
-	// TODO: handle done
+	// outcomes with done=true are ignored
 	function named_juxt(fns) {
 		var keys = Object.keys(fns);
 		return function(e) {
@@ -290,7 +310,9 @@ var Fungoid = (function() {
 
 		// output
 		appending_array_output: appending_array_output,
+		prepending_array_output: prepending_array_output,
 		keeplast_output: keeplast_output,
+		keeplast_output_safe: keeplast_output_safe,
 		group_by: group_by,
 
 		// transformations
