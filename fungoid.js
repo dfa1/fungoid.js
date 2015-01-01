@@ -27,7 +27,7 @@ class MapTransformer {
 	}
 }
 
-// discards value where fn(value)
+// discards value when fn(value) yields false
 class FilterTransformer {
 
 	constructor(fn, downstream) {
@@ -42,7 +42,6 @@ class FilterTransformer {
 	result(acc) {
 		return this.downstream.result(acc);
 	}
-
 
 	step(acc, value) {
 		if (this.fn(value)) {
@@ -215,6 +214,7 @@ class Transducer {
 		return transformer;
 	}
 
+	// TODO: reducer is a shitty name
 	transduce(reducer) {
 		let transformer = this.build(reducer);
 		return this.source(transformer);
@@ -222,6 +222,10 @@ class Transducer {
 
 	toArray() {
 		return this.transduce(new ArrayReducer());
+	}
+
+	min() {
+		return this.transduce(new MinReducer());
 	}
 
 }

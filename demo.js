@@ -35,6 +35,11 @@ describe("demo", function() {
 		expect(outcome).toEqual([12]);
 	});
 
+	it('range -> scalar (min)', function() {
+		var outcome = Fungoid.Transducer.fromRange(10, 13).min();
+		expect(outcome).toEqual(10);
+	});
+
 	/*
 	it("drop_take", function() {
 		var outcome = Fungoid.Pipeline.ofRange(1, 5).drop(2).take(1).toArray();
