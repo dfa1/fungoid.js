@@ -14,11 +14,25 @@ describe("demo", function() {
 		expect(outcome).toEqual([11, 12, 13]);
 	});
 
-	it('range -> inc -> dec -> array', function() {
+	it('range -> map -> map -> array', function() {
 		var inc = function(i) { return i + 1; };
 		var dec = function(i) { return i - 1; };
 		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).map(dec).toArray();
 		expect(outcome).toEqual([10, 11, 12]);
+	});
+
+	it('range -> filter -> map -> array', function() {
+		var inc = function(i) { return i + 1; };
+		var isEven = function(i) { return i % 2 === 0; };
+		var outcome = Fungoid.Transducer.fromRange(10, 13).filter(isEven).map(inc).toArray();
+		expect(outcome).toEqual([11, 13]);
+	});
+
+	it('range -> map -> filter -> array', function() {
+		var inc = function(i) { return i + 1; };
+		var isEven = function(i) { return i % 2 === 0; };
+		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).filter(isEven).toArray();
+		expect(outcome).toEqual([12]);
 	});
 
 	/*
