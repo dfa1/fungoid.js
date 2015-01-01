@@ -5,6 +5,8 @@
 // - forward compatibility with ES6 iterators
 // - no library dependencies
 
+// XXX: this approach suffers a major performance penalty
+//      we must allocate **many** iterator results
 class IteratorResult {
 
 	static value(value) {
