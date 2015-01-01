@@ -76,6 +76,10 @@ class TakeTransformer {
 	}
 
 	result(acc) {
+		// TODO: double check, other impls unwraps right after step()
+		if (acc instanceof Reduced) {
+			acc = acc.unwrap();
+		}
 		return this.downstream.result(acc);
 	}
 
@@ -225,7 +229,6 @@ function rangeSource(start, end) {
 		for (let i = start; i < end; i += 1) {
 			acc = transformer.step(acc, i);
 			if (acc instanceof Reduced) {
-				acc = acc.unwrap();
 				break;
 			}
 		}
@@ -239,7 +242,6 @@ function arraySource(array) {
 		for (let i = 0; i < array.length; i += 1) {
 			acc = transformer.step(acc, array[i]);
 			if (acc instanceof Reduced) {
-				acc = acc.unwrap();
 				break;
 			}
 		}
