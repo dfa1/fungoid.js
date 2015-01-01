@@ -1,10 +1,11 @@
 // Objectives:
 // - inspired by Clojure transducers
-// - fluent interface + juxt and several other transformers
+// - fluent interface
+// - no type dispatching: user explicitly specify both source and target of transformations
 // - no intermediate array allocations
+// - no library dependencies
 // - target is ES5
 // - forward compatibility with ES6 iterators
-// - no library dependencies
 
 // yields fn(value) for each value
 class MapTransformer {
@@ -315,7 +316,7 @@ class Transducer {
 	}
 
 	sum() {
-		return this.transduce(new SumReducer());
+		return this.transduce(new MinReducer());
 	}
 }
 
