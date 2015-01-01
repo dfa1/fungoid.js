@@ -2,3 +2,5 @@ node_modules/
 build/
 *.swp
 *.DS_Store
+.coverdata/
+.coverrun
