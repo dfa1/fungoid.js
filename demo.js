@@ -60,6 +60,13 @@ describe("demo", function() {
 		expect(outcome).toEqual([ 3 ]);
 	});
 
+	it("range -> map -> sum", function() {
+		var pow2 = function(n) { return Math.pow(2, n); };
+		var outcome = Fungoid.Transducer.fromRange(0, 11).map(pow2).sum();
+		expect(outcome).toEqual(2047);
+	});
+
+
 	/*
 	it("even_or_odd", function() {
 		var even_or_odd = function(e) { return e % 2 ? "odd" : "even"; };

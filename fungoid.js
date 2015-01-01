@@ -284,6 +284,8 @@ class Transducer {
 		return this;
 	}
 
+	// reductions
+
 	// allows manual inspecting of the final transformer
 	build(reducer) {
 		let transformer = reducer;
@@ -308,6 +310,13 @@ class Transducer {
 		return this.transduce(new MinReducer());
 	}
 
+	max() {
+		return this.transduce(new MaxReducer());
+	}
+
+	sum() {
+		return this.transduce(new SumReducer());
+	}
 }
 
 // workaround for browser
