@@ -3,11 +3,25 @@ var Fungoid = require("./build/fungoid.js");
 describe("demo", function() {
 	'use strict';
 
-	it('range to array', function() {
-		var outcome = Fungoid.Pipeline.ofRange(10, 13).toArray();
+	it('range -> array', function() {
+		var outcome = Fungoid.Transducer.fromRange(10, 13).toArray().transduce();
 		expect(outcome).toEqual([10, 11, 12]);
 	});
 
+	it('range -> inc -> array', function() {
+		var inc = function(i) { return i + 1; };
+		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).toArray().transduce();
+		expect(outcome).toEqual([11, 12, 13]);
+	});
+
+	it('range -> inc -> dec -> array', function() {
+		var inc = function(i) { return i + 1; };
+		var dec = function(i) { return i - 1; };
+		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).map(dec).toArray().transduce();
+		expect(outcome).toEqual([10, 11, 12]);
+	});
+
+	/*
 	it("drop_take", function() {
 		var outcome = Fungoid.Pipeline.ofRange(1, 5).drop(2).take(1).toArray();
 		expect(outcome).toEqual([ 3 ]);
@@ -19,7 +33,6 @@ describe("demo", function() {
 		expect(outcome).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
 	});
 
-	/*
 	it("fizzbuzz with named_juxt", function() {
 		var output = Fungoid.transform(
 			Fungoid.range_input_iterator(1, 21),

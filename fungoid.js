@@ -1,212 +1,55 @@
 // Objectives:
-// - no intermediate array allocations, unlike other libraries
-// - automatic currying: map with one argument yields a detached iterator
+// - inspired by Clojure transducers
+// - fluent interface + juxt and several other transformers
+// - no intermediate array allocations
 // - target is ES5
 // - forward compatibility with ES6 iterators
 // - no library dependencies
 
-// XXX: this approach suffers a major performance penalty
-//      we must allocate **many** iterator results
-class IteratorResult {
-
-	static value(value) {
-		return { done: false, value: value};
-	}
-
-	static done() {
-		return { done: true };
-	}
-}
-
-class ArrayIterator {
-
-	constructor(ary) {
-		this.ary = ary;
-		this.i = 0;
-	}
-
-	next() {
-		if (this.i < this.ary.length) {
-			let element = this.ary[this.i];
-			this.i += 1;
-			return IteratorResult.value(element);
-		} else {
-			return IteratorResult.done();
-		}
-	}
-}
-
-// yields numbers in range [start, stop)
-// TODO: step
-class RangeIterator {
-
-	constructor(start, stop) {
-		this.i = start;
-		this.stop = stop;
-	}
-
-	next() {
-		if (this.i < this.stop) {
-			let value = this.i;
-			this.i += 1;
-			return IteratorResult.value(value);
-		} else {
-			return IteratorResult.done();
-		}
-	}
-}
-
-// yields value indefinitely
-class RepeatIterator {
-
-	constructor(value) {
-		this.value = value;
-	}
-
-	next() {
-		return IteratorResult.value(this.value);
-	}
-}
-
-// yields [k, object[k]]
-class ObjectIterator {
-
-	constructor(object) {
-		this.object = object;
-		this.keys = Object.keys(object);
-		this.i = 0;
-	}
-
-	next() {
-		if (this.i < this.keys.length) {
-			let k = this.keys[this.i];
-			let v = this.object[k];
-			this.i += 1;
-			return IteratorResult.value([k, v]);
-		} else {
-			return IteratorResult.done();
-		}
-	}
-}
-
 // yields fn(value) for each value
-class MapIterator {
+class MapTransformer {
 
-	constructor(fn, upstream) {
+	constructor(fn, downstream) {
 		this.fn = fn;
-		this.upstream = upstream;
+		this.downstream = downstream;
 	}
 
-	next() {
-		let it = this.upstream.next();
-		if (it.done) {
-			return it;
-		}
-		let mappedValue = this.fn(it.value);
-		return IteratorResult.value(mappedValue);
+	init() {
+		return this.downstream.init();
+	}
+
+	result(acc) {
+		return this.downstream.result(acc);
+	}
+
+	step(acc, value) {
+		return this.downstream.step(acc, this.fn(value));
 	}
 }
 
-// discards value where fn(value) === false
-class FilterIterator {
+// discards value where fn(value)
+class FilterTransformer {
 
-	constructor(fn, upstream) {
+	constructor(fn, downstream) {
 		this.fn = fn;
-		this.upstream = upstream;
+		this.downstream = downstream;
 	}
 
-	next() {
-		for (;;) {
-			let it = this.upstream.next();
-			if (it.done) {
-				return it;
-			}
-			let accepted = this.fn(it.value) === true;
-			if (accepted) {
-				return it;
-			}
+	init() {
+		return this.downstream.init();
+	}
+
+	result(acc) {
+		return this.downstream.result(acc);
+	}
+
+
+	step(acc, value) {
+		if (this.fn(value)) {
+			return this.downstream.step(acc, value);
+		} else {
+			return acc;
 		}
-	}
-}
-
-class TakeIterator {
-
-	constructor(n, upstream) {
-		if (n < 0) {
-			throw new Error("n cannot be negative");
-		}
-		this.n = n;
-		this.upstream = upstream;
-	}
-
-	next() {
-		if (this.n === 0) {
-			return IteratorResult.done();
-		}
-		this.n -= 1;
-		return this.upstream.next();
-	}
-}
-
-class DropIterator {
-
-	constructor(n, upstream) {
-		if (n < 0) {
-			throw new Error("n cannot be negative");
-		}
-		this.n = n;
-		this.upstream = upstream;
-	}
-
-	next() {
-		while (this.n > 0) {
-			let ignored = this.upstream.next();
-			this.n -= 1;
-		}
-		return this.upstream.next();
-	}
-}
-
-// call fn for each value, presumably for side-effect
-class TapIterator {
-
-	constructor(fn, upstream) {
-		this.fn = fn;
-		this.upstream = upstream;
-	}
-
-	next() {
-		let it = this.upstream.next();
-		if (it.done) {
-			return it;
-		}
-		this.fn(it.value);
-		return it;
-	}
-
-}
-
-// juxt(f,g,h) -> [f(x),g(x),h(x)]
-// TODO: upstream + rewrite using map
-class JuxtIterator {
-
-	constructor() {
-        this.fns = Array.prototype.slice.call(arguments);
-	}
-
-	next() {
-		let it = this.upstream.next();
-		if (it.done) {
-			return it;
-		}
-		let value = it.value;
-        let newValues = [];
-		for (let i = 0; i < this.fns.length; i += 1) {
-			let fn = this.fns[i];
-			let newValue = fn(e);
-			newValues.push(newValue);
-		}
-		return IteratorResult.value(newValues);
 	}
 }
 
@@ -221,6 +64,9 @@ class ArrayReducer {
 		return acc;
 	}
 
+	result(acc) {
+		return acc;
+	}
 }
 
 class ObjectReducer {
@@ -236,6 +82,9 @@ class ObjectReducer {
 		return acc;
 	}
 
+	result(acc) {
+		return acc;
+	}
 }
 
 class GroupByReducer {
@@ -257,6 +106,9 @@ class GroupByReducer {
 		return acc;
 	}
 
+ 	result(acc) {
+		return acc;
+	}
 }
 
 class MaxReducer {
@@ -267,6 +119,9 @@ class MaxReducer {
 
 	step(acc, value) {
 		return Math.max(acc, value);
+	}
+ 	result(acc) {
+		return acc;
 	}
 
 }
@@ -280,6 +135,9 @@ class MinReducer {
 	step(acc, value) {
 		return Math.min(acc, value);
 	}
+ 	result(acc) {
+		return acc;
+	}
 
 }
 
@@ -292,111 +150,83 @@ class SumReducer {
 	step(acc, value) {
 		return acc + value;
 	}
+
+	result(acc) {
+		return acc;
+	}
+
 }
 
-// reducer:
-//   init()           -> acc
-//   step(acc, value) -> acc
-// TODO: result(acc)      -> acc
-function reduce(iterator, reducer) {
-	let acc = reducer.init();
-	for (;;) {
-		let it = iterator.next();
-		if (it.done) {
-			return acc;
+function rangeSource(start, end) {
+	return function(transformer) {
+		let acc = transformer.init();
+		for (let i = start; i < end; i += 1) {
+			acc = transformer.step(acc, i);
 		}
-		acc = reducer.step(acc, it.value);
-	}
+		return transformer.result(acc);
+	};
 }
 
-class Pipeline {
+function arraySource(array) {
+	return function(transformer) {
+		let acc = transformer.init();
+		for (let i = 0; i < array.length; i += 1) {
+			acc = transformer.step(acc, array[i]);
+		}
+		return transformer.result(acc);
+	};
+}
 
-	constructor(upstream) {
-		this.upstream = upstream;
+// we don't want dispatch by type: let the client call the right function
+// (open/closed principle)
+class Transducer {
+
+	constructor(source) {
+		this.source = source;
+		this.transformers = [];
+		this.destination = null;
 	}
 
-	static of(iterator) {
-		return new Pipeline(iterator);
-	}
-	static ofArray(ary) {
-		return new Pipeline(new ArrayIterator(ary));
+	// [start, end)
+	static fromRange(start, end) {
+		return new Transducer(rangeSource(start, end));
 	}
 
-	static ofObject(object) {
-		return new Pipeline(new ObjectIterator(object));
+	static fromArray(array) {
+		return new Transducer(arraySource(array));
 	}
 
-	static ofRange(start, stop) {
-		return new Pipeline(new RangeIterator(start, stop));
+	toArray() {
+		this.destination = new ArrayReducer();
+		return this;
 	}
 
 	map(fn) {
-	   	this.upstream = new MapIterator(fn, this.upstream);
+		this.transformers.unshift(new MapTransformer(fn));
 		return this;
 	}
 
 	filter(fn) {
-	   	this.upstream = new FilterIterator(fn, this.upstream);
+		this.transformers.unshift(new FilterTransformer(fn));
 		return this;
 	}
 
-	take(n) {
-	   	this.upstream = new TakeIterator(n, this.upstream);
-		return this;
+	transduce() {
+		if (!this.destination) {
+			throw new Error("missing destination reducer");
+		}
+		let transformer = this.destination;
+		for (let i = 0; i < this.transformers.length; i += 1) {
+			this.transformers[i].downstream = transformer;
+			transformer = this.transformers[i];
+		}
+		return this.source(transformer);
 	}
 
-	drop(n) {
-	   	this.upstream = new DropIterator(n, this.upstream);
-		return this;
-	}
-
-	tap(fn) {
-		this.upstream = new TapIterator(fn, this.upstream);
-		return this;
-	}
-
-	reduce(reducer) {
-		return reduce(this.upstream, reducer);
-	}
-
-	min() {
-		return reduce(this.upstream, new MinReducer());
-	}
-
-	max() {
-		return reduce(this.upstream, new MaxReducer());
-	}
-
-	sum() {
-		return reduce(this.upstream, new SumReducer());
-	}
-
-	toArray() {
-		return reduce(this.upstream, new ArrayReducer());
-	}
-
-	toObject() {
-		return reduce(this.upstream, new ObjectReducer());
-	}
-
-	toGroups(fn) {
-		return reduce(this.upstream, new GroupByReducer(fn));
-	}
 }
 
 // workaround for browser
 var exports = {};
 export {
-	ArrayIterator,
-	ObjectIterator,
-	RangeIterator,
-	RepeatIterator,
-
-	MapIterator,
-	FilterIterator,
-	TakeIterator,
-	DropIterator,
-	TapIterator,
-
-	Pipeline,
+	Transducer
 }
