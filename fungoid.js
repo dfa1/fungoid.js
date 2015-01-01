@@ -19,12 +19,12 @@ class MapTransformer {
 		return this.downstream.init();
 	}
 
-	result(acc) {
-		return this.downstream.result(acc);
+	result(result) {
+		return this.downstream.result(result);
 	}
 
-	step(acc, value) {
-		return this.downstream.step(acc, this.fn(value));
+	step(result, value) {
+		return this.downstream.step(result, this.fn(value));
 	}
 }
 
@@ -40,15 +40,15 @@ class FilterTransformer {
 		return this.downstream.init();
 	}
 
-	result(acc) {
-		return this.downstream.result(acc);
+	result(result) {
+		return this.downstream.result(result);
 	}
 
-	step(acc, value) {
+	step(result, value) {
 		if (this.fn(value)) {
-			return this.downstream.step(acc, value);
+			return this.downstream.step(result, value);
 		} else {
-			return acc;
+			return result;
 		}
 	}
 }
@@ -75,20 +75,20 @@ class TakeTransformer {
 		return this.downstream.init();
 	}
 
-	result(acc) {
+	result(result) {
 		// TODO: double check, other impls unwraps right after step()
-		if (acc instanceof Reduced) {
-			acc = acc.unwrap();
+		if (result instanceof Reduced) {
+			result = result.unwrap();
 		}
-		return this.downstream.result(acc);
+		return this.downstream.result(result);
 	}
 
-	step(acc, value) {
+	step(result, value) {
 		if (this.n > 0) {
 			this.n -= 1;
-			return this.downstream.step(acc, value);
+			return this.downstream.step(result, value);
 		} else {
-			return new Reduced(acc);
+			return new Reduced(result);
 		}
 	}
 }
@@ -104,16 +104,16 @@ class DropTransformer {
 		return this.downstream.init();
 	}
 
-	result(acc) {
-		return this.downstream.result(acc);
+	result(result) {
+		return this.downstream.result(result);
 	}
 
-	step(acc, value) {
+	step(result, value) {
 		if (this.n > 0) {
 			this.n -= 1;
-			return acc;
+			return result;
 		} else {
-			return this.downstream.step(acc, value);
+			return this.downstream.step(result, value);
 		}
 	}
 }
@@ -125,13 +125,13 @@ class ArrayReducer {
 		return [];
 	}
 
-	step(acc, value) {
-		acc.push(value);
-		return acc;
+	step(result, value) {
+		result.push(value);
+		return result;
 	}
 
-	result(acc) {
-		return acc;
+	result(result) {
+		return result;
 	}
 }
 
@@ -141,15 +141,15 @@ class ObjectReducer {
 		return {};
 	}
 
-	step(acc, value) {
+	step(result, value) {
 		let k = value[0];
 		let v = value[1];
-		acc[k] = v;
-		return acc;
+		result[k] = v;
+		return result;
 	}
 
-	result(acc) {
-		return acc;
+	result(result) {
+		return result;
 	}
 }
 
@@ -163,17 +163,17 @@ class GroupByReducer {
 		return {};
 	}
 
-	step(acc, value) {
+	step(result, value) {
 		let key = this.fn(value);
-		if (!acc[key]) {
-			acc[key]= [];
+		if (!result[key]) {
+			result[key]= [];
 		}
-		acc[key].push(value);
-		return acc;
+		result[key].push(value);
+		return result;
 	}
 
- 	result(acc) {
-		return acc;
+ 	result(result) {
+		return result;
 	}
 }
 
@@ -183,11 +183,11 @@ class MaxReducer {
 		return -Infinity;
 	}
 
-	step(acc, value) {
-		return Math.max(acc, value);
+	step(result, value) {
+		return Math.max(result, value);
 	}
- 	result(acc) {
-		return acc;
+ 	result(result) {
+		return result;
 	}
 
 }
@@ -198,11 +198,11 @@ class MinReducer {
 		return +Infinity;
 	}
 
-	step(acc, value) {
-		return Math.min(acc, value);
+	step(result, value) {
+		return Math.min(result, value);
 	}
- 	result(acc) {
-		return acc;
+ 	result(result) {
+		return result;
 	}
 
 }
@@ -213,39 +213,39 @@ class SumReducer {
 		return 0;
 	}
 
-	step(acc, value) {
-		return acc + value;
+	step(result, value) {
+		return result + value;
 	}
 
-	result(acc) {
-		return acc;
+	result(result) {
+		return result;
 	}
 
 }
 
 function rangeSource(start, end) {
 	return function(transformer) {
-		let acc = transformer.init();
+		let result = transformer.init();
 		for (let i = start; i < end; i += 1) {
-			acc = transformer.step(acc, i);
-			if (acc instanceof Reduced) {
+			result = transformer.step(result, i);
+			if (result instanceof Reduced) {
 				break;
 			}
 		}
-		return transformer.result(acc);
+		return transformer.result(result);
 	};
 }
 
 function arraySource(array) {
 	return function(transformer) {
-		let acc = transformer.init();
+		let result = transformer.init();
 		for (let i = 0; i < array.length; i += 1) {
-			acc = transformer.step(acc, array[i]);
-			if (acc instanceof Reduced) {
+			result = transformer.step(result, array[i]);
+			if (result instanceof Reduced) {
 				break;
 			}
 		}
-		return transformer.result(acc);
+		return transformer.result(result);
 	};
 }
 
