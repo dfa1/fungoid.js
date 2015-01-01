@@ -52,6 +52,68 @@ class FilterTransformer {
 	}
 }
 
+class Reduced {
+
+	constructor(result) {
+		this.result = result;
+	}
+
+	unwrap() {
+		return this.result;
+	}
+}
+
+class TakeTransformer {
+
+	constructor(n, downstream) {
+		this.n = n;
+		this.downstream = downstream;
+	}
+
+	init() {
+		return this.downstream.init();
+	}
+
+	result(acc) {
+		return this.downstream.result(acc);
+	}
+
+	step(acc, value) {
+		if (this.n > 0) {
+			this.n -= 1;
+			return this.downstream.step(acc, value);
+		} else {
+			return new Reduced(acc);
+		}
+	}
+}
+
+class DropTransformer {
+
+	constructor(n, downstream) {
+		this.n = n;
+		this.downstream = downstream;
+	}
+
+	init() {
+		return this.downstream.init();
+	}
+
+	result(acc) {
+		return this.downstream.result(acc);
+	}
+
+	step(acc, value) {
+		if (this.n > 0) {
+			this.n -= 1;
+			return acc;
+		} else {
+			return this.downstream.step(acc, value);
+		}
+	}
+}
+
+
 class ArrayReducer {
 
 	init() {
@@ -161,6 +223,10 @@ function rangeSource(start, end) {
 		let acc = transformer.init();
 		for (let i = start; i < end; i += 1) {
 			acc = transformer.step(acc, i);
+			if (acc instanceof Reduced) {
+				acc = acc.unwrap();
+				break;
+			}
 		}
 		return transformer.result(acc);
 	};
@@ -171,6 +237,10 @@ function arraySource(array) {
 		let acc = transformer.init();
 		for (let i = 0; i < array.length; i += 1) {
 			acc = transformer.step(acc, array[i]);
+			if (acc instanceof Reduced) {
+				acc = acc.unwrap();
+				break;
+			}
 		}
 		return transformer.result(acc);
 	};
@@ -201,6 +271,16 @@ class Transducer {
 
 	filter(fn) {
 		this.transformers.unshift(new FilterTransformer(fn));
+		return this;
+	}
+
+	take(n) {
+		this.transformers.unshift(new TakeTransformer(n));
+		return this;
+	}
+
+	drop(n) {
+		this.transformers.unshift(new DropTransformer(n));
 		return this;
 	}
 

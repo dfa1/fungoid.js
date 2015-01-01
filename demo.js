@@ -40,12 +40,27 @@ describe("demo", function() {
 		expect(outcome).toEqual(10);
 	});
 
-	/*
-	it("drop_take", function() {
-		var outcome = Fungoid.Pipeline.ofRange(1, 5).drop(2).take(1).toArray();
+	it('range -> take(1) -> array', function() {
+		var outcome = Fungoid.Transducer.fromRange(10, 13).take(1).toArray();
+		expect(outcome).toEqual([10]);
+	});
+
+	it('range -> take(3) -> array', function() {
+		var outcome = Fungoid.Transducer.fromRange(10, 13).take(3).toArray();
+		expect(outcome).toEqual([10, 11, 12]);
+	});
+
+	it('range -> take(0) -> array', function() {
+		var outcome = Fungoid.Transducer.fromRange(10, 13).take(0).toArray();
+		expect(outcome).toEqual([]);
+	});
+
+	it("range -> drop -> take -> array", function() {
+		var outcome = Fungoid.Transducer.fromRange(1, 5).drop(2).take(1).toArray();
 		expect(outcome).toEqual([ 3 ]);
 	});
 
+	/*
 	it("even_or_odd", function() {
 		var even_or_odd = function(e) { return e % 2 ? "odd" : "even"; };
 		var outcome = Fungoid.Pipeline.ofRange(1, 5).toGroups(even_or_odd);
