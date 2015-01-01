@@ -316,7 +316,7 @@ class Transducer {
 	}
 
 	sum() {
-		return this.transduce(new MinReducer());
+		return this.transduce(new SumReducer());
 	}
 }
 
