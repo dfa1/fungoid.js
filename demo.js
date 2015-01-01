@@ -4,20 +4,20 @@ describe("demo", function() {
 	'use strict';
 
 	it('range -> array', function() {
-		var outcome = Fungoid.Transducer.fromRange(10, 13).toArray().transduce();
+		var outcome = Fungoid.Transducer.fromRange(10, 13).toArray();
 		expect(outcome).toEqual([10, 11, 12]);
 	});
 
 	it('range -> inc -> array', function() {
 		var inc = function(i) { return i + 1; };
-		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).toArray().transduce();
+		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).toArray();
 		expect(outcome).toEqual([11, 12, 13]);
 	});
 
 	it('range -> inc -> dec -> array', function() {
 		var inc = function(i) { return i + 1; };
 		var dec = function(i) { return i - 1; };
-		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).map(dec).toArray().transduce();
+		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).map(dec).toArray();
 		expect(outcome).toEqual([10, 11, 12]);
 	});
 

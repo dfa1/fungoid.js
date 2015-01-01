@@ -184,7 +184,6 @@ class Transducer {
 	constructor(source) {
 		this.source = source;
 		this.transformers = [];
-		this.destination = null;
 	}
 
 	// [start, end)
@@ -194,11 +193,6 @@ class Transducer {
 
 	static fromArray(array) {
 		return new Transducer(arraySource(array));
-	}
-
-	toArray() {
-		this.destination = new ArrayReducer();
-		return this;
 	}
 
 	map(fn) {
@@ -211,16 +205,23 @@ class Transducer {
 		return this;
 	}
 
-	transduce() {
-		if (!this.destination) {
-			throw new Error("missing destination reducer");
-		}
-		let transformer = this.destination;
+	// allows manual inspecting of the final transformer
+	build(reducer) {
+		let transformer = reducer;
 		for (let i = 0; i < this.transformers.length; i += 1) {
 			this.transformers[i].downstream = transformer;
 			transformer = this.transformers[i];
 		}
+		return transformer;
+	}
+
+	transduce(reducer) {
+		let transformer = this.build(reducer);
 		return this.source(transformer);
+	}
+
+	toArray() {
+		return this.transduce(new ArrayReducer());
 	}
 
 }
