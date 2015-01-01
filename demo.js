@@ -66,6 +66,16 @@ describe("demo", function() {
 		expect(outcome).toEqual(2047);
 	});
 
+	it("array -> max", function() {
+		var outcome = Fungoid.Transducer.fromArray([-1, 2]).max();
+		expect(outcome).toEqual(2);
+	});
+
+	it("empty array -> max", function() {
+		var outcome = Fungoid.Transducer.fromArray([]).max();
+		expect(outcome).toEqual(-Infinity);
+	});
+
 
 	/*
 	it("even_or_odd", function() {
