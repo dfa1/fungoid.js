@@ -125,7 +125,6 @@ class FlattenTransformer {
 		this.downstream = downstream;
 	}
 
-
 	init() {
 		return this.downstream.init();
 	}
@@ -279,6 +278,23 @@ function arraySource(array) {
 	};
 }
 
+function iteratorSource(iterator) {
+	return function(transformer) {
+		let result = transformer.init();
+		for (;;) {
+			let it = iterator.next();
+			if (it.done) {
+				break;
+			}
+			result = transformer.step(result, it.value);
+			if (result instanceof Reduced) {
+				break;
+			}
+		}
+		return transformer.result(result);
+	};
+}
+
 // we don't want dispatch by type: let the client call the right method
 // source -> transformation1 -> ... -> transformationN -> reducer
 class Transducer {
@@ -295,6 +311,10 @@ class Transducer {
 
 	static fromArray(array) {
 		return new Transducer(arraySource(array));
+	}
+
+	static fromIterator(iterator) {
+		return new Transducer(iteratorSource(iterator));
 	}
 
 	map(fn) {

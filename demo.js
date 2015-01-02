@@ -81,40 +81,57 @@ describe("demo", function() {
 		expect(outcome).toEqual([1,2,3,4,5]);
 	});
 
-	/*
-	it("even_or_odd", function() {
-		var even_or_odd = function(e) { return e % 2 ? "odd" : "even"; };
-		var outcome = Fungoid.Pipeline.ofRange(1, 5).toGroups(even_or_odd);
-		expect(outcome).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
+	function makeIterator(n) {
+		var nextValue = 0;
+		return {
+			next: function() {
+				return nextValue < n ?
+				{value: nextValue++, done: false} :
+				{done: true};
+			}
+		}
+	}
+
+	it("iterator -> array ", function() {
+		var iterator = makeIterator(5);
+		var outcome = Fungoid.Transducer.fromIterator(iterator).toArray();
+		expect(outcome).toEqual([0,1,2,3,4]);
 	});
 
-	it("fizzbuzz with named_juxt", function() {
-		var output = Fungoid.transform(
-			Fungoid.range_input_iterator(1, 21),
-			Fungoid.pipeline(
-				Fungoid.named_juxt({
-					untouched: Fungoid.identity(),
-				fizz:  Fungoid.filter(function(e) { return e % 3 === 0; }),
-				buzz:  Fungoid.filter(function(e) { return e % 5 === 0; }),
-				}),
-				Fungoid.map(function(e) {
-					if (e.fizz && e.buzz) {
-						return "fizzbuzz";
-					}
-					if (e.fizz) {
-						return "fizz";
-					}
-					if (e.buzz) {
-						return "buzz";
-					}
-					return e.untouched;
-				}
-				)
-				),
-			Fungoid.appending_array_output()
-				);
-		expect(output).toEqual([ 1, 2, "fizz", 4, "buzz", "fizz", 7, 8, "fizz", "buzz", 11, "fizz", 13, 14, "fizzbuzz", 16, 17, "fizz", 19, "buzz" ]);
-	});
-	*/
+/*
+   it("even_or_odd", function() {
+   var even_or_odd = function(e) { return e % 2 ? "odd" : "even"; };
+   var outcome = Fungoid.Pipeline.ofRange(1, 5).toGroups(even_or_odd);
+   expect(outcome).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
+   });
+
+   it("fizzbuzz with named_juxt", function() {
+   var output = Fungoid.transform(
+   Fungoid.range_input_iterator(1, 21),
+   Fungoid.pipeline(
+   Fungoid.named_juxt({
+   untouched: Fungoid.identity(),
+   fizz:  Fungoid.filter(function(e) { return e % 3 === 0; }),
+   buzz:  Fungoid.filter(function(e) { return e % 5 === 0; }),
+   }),
+   Fungoid.map(function(e) {
+   if (e.fizz && e.buzz) {
+   return "fizzbuzz";
+   }
+   if (e.fizz) {
+   return "fizz";
+   }
+   if (e.buzz) {
+   return "buzz";
+   }
+   return e.untouched;
+   }
+   )
+   ),
+   Fungoid.appending_array_output()
+   );
+   expect(output).toEqual([ 1, 2, "fizz", 4, "buzz", "fizz", 7, 8, "fizz", "buzz", 11, "fizz", 13, 14, "fizzbuzz", 16, 17, "fizz", 19, "buzz" ]);
+   });
+   */
 
 });
