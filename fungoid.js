@@ -118,7 +118,37 @@ class DropTransformer {
 	}
 }
 
+// TODO: inelegant solution that works only for arrays
+class FlattenTransformer {
 
+	constructor(downstream) {
+		this.downstream = downstream;
+	}
+
+
+	init() {
+		return this.downstream.init();
+	}
+
+	result(result) {
+		return this.downstream.result(result);
+	}
+
+	step(result, value) {
+		if (Array.isArray(value)) {
+			let array = value;
+			for (let i = 0; i < array.length; i += 1) {
+				result = this.step(result, array[i]);
+			}
+			return result;
+		}
+
+		return this.downstream.step(result, value);
+	}
+
+}
+
+// reducers
 class ArrayReducer {
 
 	init() {
@@ -284,6 +314,11 @@ class Transducer {
 
 	drop(n) {
 		this.transformers.unshift(new DropTransformer(n));
+		return this;
+	}
+
+	flatten() {
+		this.transformers.unshift(new FlattenTransformer());
 		return this;
 	}
 

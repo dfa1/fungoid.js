@@ -76,6 +76,10 @@ describe("demo", function() {
 		expect(outcome).toEqual(-Infinity);
 	});
 
+	it("array -> flatten -> array ", function() {
+		var outcome = Fungoid.Transducer.fromArray([[1,2], [[[3]]], [4, [5]]]).flatten().toArray();
+		expect(outcome).toEqual([1,2,3,4,5]);
+	});
 
 	/*
 	it("even_or_odd", function() {
