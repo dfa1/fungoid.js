@@ -24,7 +24,7 @@ gulp.task('test', [ 'build' ], function () {
 });
 
 gulp.task('coverage', [ 'build' ], function () {
-	return gulp.src('test-fungoid.js')
+	return gulp.src(['demo.js', 'test-fungoid.js'])
 	.pipe(cover.instrument({
 		pattern: ['build/fungoid.js'],
 		debugDirectory: 'build/debug'

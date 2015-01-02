@@ -249,8 +249,8 @@ function arraySource(array) {
 	};
 }
 
-// we don't want dispatch by type: let the client call the right function
-// (open/closed principle)
+// we don't want dispatch by type: let the client call the right method
+// source -> transformation1 -> ... -> transformationN -> reducer
 class Transducer {
 
 	constructor(source) {
