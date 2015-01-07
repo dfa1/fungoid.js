@@ -2,7 +2,7 @@
 // - inspired by Clojure transducers
 // - fluent interface
 // - no type dispatching: user explicitly specify both source and target of transformations
-// - no intermediate array allocations
+// - no intermediate allocations
 // - no library dependencies
 // - target is ES5
 // - forward compatibility with ES6 iterators
@@ -215,6 +215,7 @@ class MaxReducer {
 	step(result, value) {
 		return Math.max(result, value);
 	}
+
  	result(result) {
 		return result;
 	}
@@ -230,6 +231,7 @@ class MinReducer {
 	step(result, value) {
 		return Math.min(result, value);
 	}
+
  	result(result) {
 		return result;
 	}
