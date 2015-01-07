@@ -20,6 +20,8 @@ gulp.task('build', function () {
 
 gulp.task('test', [ 'build' ], function () {
 	return gulp.src(['test-fungoid.js', 'demo.js'])
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'))
 	.pipe(jasmine());
 });
 

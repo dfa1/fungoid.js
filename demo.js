@@ -89,7 +89,7 @@ describe("demo", function() {
 				{value: nextValue++, done: false} :
 				{done: true};
 			}
-		}
+		};
 	}
 
 	it("iterator -> array ", function() {
