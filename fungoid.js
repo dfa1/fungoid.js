@@ -295,26 +295,11 @@ function iteratorSource(iterator) {
 	};
 }
 
-// we don't want dispatch by type: let the client call the right method
-// source -> transformation1 -> ... -> transformationN -> reducer
-class Transducer {
+class Pipeline {
 
 	constructor(source) {
 		this.source = source;
 		this.transformers = [];
-	}
-
-	// [start, end)
-	static fromRange(start, end) {
-		return new Transducer(rangeSource(start, end));
-	}
-
-	static fromArray(array) {
-		return new Transducer(arraySource(array));
-	}
-
-	static fromIterator(iterator) {
-		return new Transducer(iteratorSource(iterator));
 	}
 
 	map(fn) {
@@ -377,8 +362,28 @@ class Transducer {
 	}
 }
 
+// we don't want dispatch by type: let the client call the right method
+// source -> transformation1 -> ... -> transformationN -> reducer
+
+// [start, end)
+function fromRange(start, end) {
+	return new Pipeline(rangeSource(start, end));
+}
+
+// array
+function fromArray(array) {
+	return new Pipeline(arraySource(array));
+}
+
+// ES6-iterators
+function fromIterator(iterator) {
+	return new Pipeline(iteratorSource(iterator));
+}
+
 // workaround for browser
 var exports = {};
 export {
-	Transducer
+	fromRange,
+	fromArray,
+	fromIterator
 }

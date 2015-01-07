@@ -4,80 +4,80 @@ describe("demo", function() {
 	'use strict';
 
 	it('range -> array', function() {
-		var outcome = Fungoid.Transducer.fromRange(10, 13).toArray();
+		var outcome = Fungoid.fromRange(10, 13).toArray();
 		expect(outcome).toEqual([10, 11, 12]);
 	});
 
 	it('range -> inc -> array', function() {
 		var inc = function(i) { return i + 1; };
-		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).toArray();
+		var outcome = Fungoid.fromRange(10, 13).map(inc).toArray();
 		expect(outcome).toEqual([11, 12, 13]);
 	});
 
 	it('range -> map -> map -> array', function() {
 		var inc = function(i) { return i + 1; };
 		var dec = function(i) { return i - 1; };
-		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).map(dec).toArray();
+		var outcome = Fungoid.fromRange(10, 13).map(inc).map(dec).toArray();
 		expect(outcome).toEqual([10, 11, 12]);
 	});
 
 	it('range -> filter -> map -> array', function() {
 		var inc = function(i) { return i + 1; };
 		var isEven = function(i) { return i % 2 === 0; };
-		var outcome = Fungoid.Transducer.fromRange(10, 13).filter(isEven).map(inc).toArray();
+		var outcome = Fungoid.fromRange(10, 13).filter(isEven).map(inc).toArray();
 		expect(outcome).toEqual([11, 13]);
 	});
 
 	it('range -> map -> filter -> array', function() {
 		var inc = function(i) { return i + 1; };
 		var isEven = function(i) { return i % 2 === 0; };
-		var outcome = Fungoid.Transducer.fromRange(10, 13).map(inc).filter(isEven).toArray();
+		var outcome = Fungoid.fromRange(10, 13).map(inc).filter(isEven).toArray();
 		expect(outcome).toEqual([12]);
 	});
 
 	it('range -> scalar (min)', function() {
-		var outcome = Fungoid.Transducer.fromRange(10, 13).min();
+		var outcome = Fungoid.fromRange(10, 13).min();
 		expect(outcome).toEqual(10);
 	});
 
 	it('range -> take(1) -> array', function() {
-		var outcome = Fungoid.Transducer.fromRange(10, 13).take(1).toArray();
+		var outcome = Fungoid.fromRange(10, 13).take(1).toArray();
 		expect(outcome).toEqual([10]);
 	});
 
 	it('range -> take(3) -> array', function() {
-		var outcome = Fungoid.Transducer.fromRange(10, 13).take(3).toArray();
+		var outcome = Fungoid.fromRange(10, 13).take(3).toArray();
 		expect(outcome).toEqual([10, 11, 12]);
 	});
 
 	it('range -> take(0) -> array', function() {
-		var outcome = Fungoid.Transducer.fromRange(10, 13).take(0).toArray();
+		var outcome = Fungoid.fromRange(10, 13).take(0).toArray();
 		expect(outcome).toEqual([]);
 	});
 
 	it("range -> drop -> take -> array", function() {
-		var outcome = Fungoid.Transducer.fromRange(1, 5).drop(2).take(1).toArray();
+		var outcome = Fungoid.fromRange(1, 5).drop(2).take(1).toArray();
 		expect(outcome).toEqual([ 3 ]);
 	});
 
 	it("range -> map -> sum", function() {
 		var pow2 = function(n) { return Math.pow(2, n); };
-		var outcome = Fungoid.Transducer.fromRange(0, 11).map(pow2).sum();
+		var outcome = Fungoid.fromRange(0, 11).map(pow2).sum();
 		expect(outcome).toEqual(2047);
 	});
 
 	it("array -> max", function() {
-		var outcome = Fungoid.Transducer.fromArray([-1, 2]).max();
+		var outcome = Fungoid.fromArray([-1, 2]).max();
 		expect(outcome).toEqual(2);
 	});
 
 	it("empty array -> max", function() {
-		var outcome = Fungoid.Transducer.fromArray([]).max();
+		var outcome = Fungoid.fromArray([]).max();
 		expect(outcome).toEqual(-Infinity);
 	});
 
 	it("array -> flatten -> array ", function() {
-		var outcome = Fungoid.Transducer.fromArray([[1,2], [[[3]]], [4, [5]]]).flatten().toArray();
+		var outcome = Fungoid.fromArray([[1,2], [[[3]]], [4, [5]]]).flatten().toArray();
 		expect(outcome).toEqual([1,2,3,4,5]);
 	});
 
@@ -94,7 +94,7 @@ describe("demo", function() {
 
 	it("iterator -> array ", function() {
 		var iterator = makeIterator(5);
-		var outcome = Fungoid.Transducer.fromIterator(iterator).toArray();
+		var outcome = Fungoid.fromIterator(iterator).toArray();
 		expect(outcome).toEqual([0,1,2,3,4]);
 	});
 
