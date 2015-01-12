@@ -98,6 +98,21 @@ describe("demo", function() {
 		expect(outcome).toEqual([0,1,2,3,4]);
 	});
 
+	it("array -> juxt -> array", function() {
+		var inc = function(n) { return n + 1; };
+		var dec = function(n) { return n - 1; };
+		var outcome = Fungoid.fromArray([0, 1]).juxt([inc, dec]).toArray();
+		expect(outcome).toEqual([[1, -1,], [2, 0]]);
+	});
+
+	it("array -> namedJuxt -> array", function() {
+		var inc = function(n) { return n + 1; };
+		var dec = function(n) { return n - 1; };
+		var outcome = Fungoid.fromArray([0, 1]).namedJuxt({x: inc, y: dec}).toArray();
+		expect(outcome).toEqual([{x: 1, y: -1},{x: 2, y: 0}]);
+	});
+
+
 /*
    it("even_or_odd", function() {
    var even_or_odd = function(e) { return e % 2 ? "odd" : "even"; };

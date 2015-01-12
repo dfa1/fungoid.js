@@ -118,7 +118,7 @@ class DropTransformer {
 	}
 }
 
-// TODO: inelegant solution that works only for arrays
+// recursively flatten arrays
 class FlattenTransformer {
 
 	constructor(downstream) {
@@ -143,6 +143,63 @@ class FlattenTransformer {
 		}
 
 		return this.downstream.step(result, value);
+	}
+
+}
+
+// juxt(cos, sin)(x) = [cos(x), sin(x)]
+class JuxtTransformer {
+
+	constructor(fns, downstream) {
+		this.fns = fns;
+		this.downstream = downstream;
+	}
+
+	init() {
+		return this.downstream.init();
+	}
+
+	result(result) {
+		return this.downstream.result(result);
+	}
+
+	step(result, value) {
+		let values = [];
+		for (let i = 0; i < this.fns.length; i += 1) {
+			let fn = this.fns[i];
+
+			values.push(fn(value));
+		}
+		return this.downstream.step(result, values);
+	}
+
+}
+
+// namedKuxt({c:cos, s:sin})(x) = {c: cos(x), s: sin(x)}
+class NamedJuxtTransformer {
+
+	constructor(fns, downstream) {
+		this.fns = fns;
+		this.downstream = downstream;
+	}
+
+	init() {
+		return this.downstream.init();
+	}
+
+	result(result) {
+		return this.downstream.result(result);
+	}
+
+	step(result, value) {
+		let values = {};
+		for (let k in this.fns) {
+			if (this.fns.hasOwnProperty(k)) {
+				let fn = this.fns[k];
+				values[k] = fn(value);
+			}
+		}
+		return this.downstream.step(result, values);
 	}
 
 }
@@ -326,6 +383,16 @@ class Pipeline {
 
 	flatten() {
 		this.transformers.unshift(new FlattenTransformer());
+		return this;
+	}
+
+	juxt(fns) {
+		this.transformers.unshift(new JuxtTransformer(fns));
+		return this;
+	}
+
+	namedJuxt(fns) {
+		this.transformers.unshift(new NamedJuxtTransformer(fns));
 		return this;
 	}
 
