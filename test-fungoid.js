@@ -1,6 +1,6 @@
 var Fungoid = require("./build/fungoid.js");
 
-describe("use cases", function() {
+describe("demo", function() {
 	'use strict';
 
 	it('range -> array', function() {
@@ -123,15 +123,13 @@ describe("use cases", function() {
 		expect(outcome).toEqual([{x: 1, y: -1},{x: 2, y: 0}]);
 	});
 
-
-
-/*
-   it("even_or_odd", function() {
-   var even_or_odd = function(e) { return e % 2 ? "odd" : "even"; };
-   var outcome = Fungoid.Pipeline.ofRange(1, 5).toGroups(even_or_odd);
-   expect(outcome).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
+   it("range -> groupBy", function() {
+	   var even_or_odd = function(e) { return e % 2 ? "odd" : "even"; };
+	   var outcome = Fungoid.fromRange(1, 5).groupBy(even_or_odd);
+	   expect(outcome).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
    });
 
+/*
    it("fizzbuzz with named_juxt", function() {
    var output = Fungoid.transform(
    Fungoid.range_input_iterator(1, 21),

@@ -382,6 +382,10 @@ class Pipeline {
 		return this.source(transformer);
 	}
 
+	groupBy(fn) {
+		return this.transduce(new GroupByReducer(fn));
+	}
+
 	toValue() {
 		return this.transduce(new ValueReducer());
 	}
