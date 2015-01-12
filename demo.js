@@ -92,10 +92,21 @@ describe("demo", function() {
 		};
 	}
 
-	it("iterator -> array ", function() {
+	it("iterator -> array", function() {
 		var iterator = makeIterator(5);
 		var outcome = Fungoid.fromIterator(iterator).toArray();
 		expect(outcome).toEqual([0,1,2,3,4]);
+	});
+
+	it("value -> value", function() {
+		var outcome = Fungoid.fromValue(1).toValue();
+		expect(outcome).toEqual(1);
+	});
+
+	it("value -> map -> value", function() {
+		var identity = function(x) { return x; };
+		var outcome = Fungoid.fromValue(1).map(identity).toValue();
+		expect(outcome).toEqual(1);
 	});
 
 	it("array -> juxt -> array", function() {
@@ -111,6 +122,7 @@ describe("demo", function() {
 		var outcome = Fungoid.fromArray([0, 1]).namedJuxt({x: inc, y: dec}).toArray();
 		expect(outcome).toEqual([{x: 1, y: -1},{x: 2, y: 0}]);
 	});
+
 
 
 /*

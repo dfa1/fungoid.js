@@ -205,6 +205,21 @@ class NamedJuxtTransformer {
 }
 
 // reducers
+class ValueReducer {
+
+	init() {
+		return undefined;
+	}
+
+	result(result) {
+		return result;
+	}
+
+	step(result, value) {
+		return value;
+	}
+};
+
 class ArrayReducer {
 
 	init() {
@@ -311,6 +326,14 @@ class SumReducer {
 
 }
 
+function valueSource(value) {
+	return function(transformer) {
+		let result = transformer.init();
+		result = transformer.step(result, value);
+		return transformer.result(result);
+	};
+}
+
 function rangeSource(start, end) {
 	return function(transformer) {
 		let result = transformer.init();
@@ -414,6 +437,10 @@ class Pipeline {
 		return this.source(transformer);
 	}
 
+	toValue() {
+		return this.transduce(new ValueReducer());
+	}
+
 	toArray() {
 		return this.transduce(new ArrayReducer());
 	}
@@ -434,6 +461,11 @@ class Pipeline {
 // we don't want dispatch by type: let the client call the right method
 // source -> transformation1 -> ... -> transformationN -> reducer
 
+// single value
+function fromValue(value) {
+	return new Pipeline(valueSource(value));
+}
+
 // [start, end)
 function fromRange(start, end) {
 	return new Pipeline(rangeSource(start, end));
@@ -452,6 +484,7 @@ function fromIterator(iterator) {
 // workaround for browser
 var exports = {};
 export {
+	fromValue,
 	fromRange,
 	fromArray,
 	fromIterator
