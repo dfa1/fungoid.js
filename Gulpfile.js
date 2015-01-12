@@ -24,14 +24,14 @@ gulp.task('build', function () {
 });
 
 gulp.task('test', [ 'build' ], function () {
-	return gulp.src(['test-fungoid.js', 'demo.js'])
+	return gulp.src(['test-fungoid.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
 	.pipe(jasmine(jasmineOptions));
 });
 
 gulp.task('coverage', [ 'build' ], function () {
-	return gulp.src(['demo.js', 'test-fungoid.js'])
+	return gulp.src(['test-fungoid.js'])
 	.pipe(cover.instrument({
 		pattern: ['build/fungoid.js'],
 		debugDirectory: 'build/debug'
