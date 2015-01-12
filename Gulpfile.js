@@ -6,6 +6,11 @@ var jasmine = require('gulp-jasmine');
 var cover = require('gulp-coverage');
 var watch = require('gulp-watch');
 
+var jasmineOptions = {
+	includeStackTrace: true,
+	verbose: true
+};
+
 gulp.task('build', function () {
     return gulp.src('./fungoid.js')
 	.pipe(to5())
@@ -22,7 +27,7 @@ gulp.task('test', [ 'build' ], function () {
 	return gulp.src(['test-fungoid.js', 'demo.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
-	.pipe(jasmine());
+	.pipe(jasmine(jasmineOptions));
 });
 
 gulp.task('coverage', [ 'build' ], function () {
