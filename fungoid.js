@@ -1,11 +1,22 @@
 // Objectives:
-// - inspired by Clojure transducers
-// - fluent interface
+// - inspired by Clojure transducers + experimental fluent interface
 // - no type dispatching: user explicitly specify both source and target of transformations
 // - no intermediate allocations
 // - no library dependencies
 // - target is ES5
 // - forward compatibility with ES6 iterators
+
+// needed to signal that the transformation has been terminated
+class Reduced {
+
+	constructor(result) {
+		this.result = result;
+	}
+
+	unwrap() {
+		return this.result;
+	}
+}
 
 // yields fn(value) for each value
 class MapTransformer {
@@ -53,17 +64,7 @@ class FilterTransformer {
 	}
 }
 
-class Reduced {
-
-	constructor(result) {
-		this.result = result;
-	}
-
-	unwrap() {
-		return this.result;
-	}
-}
-
+// takes 'n' items, then discards all
 class TakeTransformer {
 
 	constructor(n, downstream) {
@@ -76,7 +77,7 @@ class TakeTransformer {
 	}
 
 	result(result) {
-		// TODO: double check, other impls unwraps right after step()
+		// double check this: other impls unwraps right after step()
 		if (result instanceof Reduced) {
 			result = result.unwrap();
 		}
@@ -93,6 +94,7 @@ class TakeTransformer {
 	}
 }
 
+// drops 'n' items, then takes everything
 class DropTransformer {
 
 	constructor(n, downstream) {
@@ -175,7 +177,7 @@ class JuxtTransformer {
 
 }
 
-// namedKuxt({c:cos, s:sin})(x) = {c: cos(x), s: sin(x)}
+// namedJuxt({c:cos, s:sin})(x) = {c: cos(x), s: sin(x)}
 class NamedJuxtTransformer {
 
 	constructor(fns, downstream) {
@@ -204,7 +206,8 @@ class NamedJuxtTransformer {
 
 }
 
-// reducers
+// final step of transformation: reducer
+
 class ValueReducer {
 
 	init() {
@@ -326,57 +329,7 @@ class SumReducer {
 
 }
 
-function valueSource(value) {
-	return function(transformer) {
-		let result = transformer.init();
-		result = transformer.step(result, value);
-		return transformer.result(result);
-	};
-}
-
-function rangeSource(start, end) {
-	return function(transformer) {
-		let result = transformer.init();
-		for (let i = start; i < end; i += 1) {
-			result = transformer.step(result, i);
-			if (result instanceof Reduced) {
-				break;
-			}
-		}
-		return transformer.result(result);
-	};
-}
-
-function arraySource(array) {
-	return function(transformer) {
-		let result = transformer.init();
-		for (let i = 0; i < array.length; i += 1) {
-			result = transformer.step(result, array[i]);
-			if (result instanceof Reduced) {
-				break;
-			}
-		}
-		return transformer.result(result);
-	};
-}
-
-function iteratorSource(iterator) {
-	return function(transformer) {
-		let result = transformer.init();
-		for (;;) {
-			let it = iterator.next();
-			if (it.done) {
-				break;
-			}
-			result = transformer.step(result, it.value);
-			if (result instanceof Reduced) {
-				break;
-			}
-		}
-		return transformer.result(result);
-	};
-}
-
+// experimental chainable operations
 class Pipeline {
 
 	constructor(source) {
@@ -420,20 +373,12 @@ class Pipeline {
 	}
 
 	// reductions
-
-	// allows manual inspecting of the final transformer
-	build(reducer) {
+	transduce(reducer) {
 		let transformer = reducer;
 		for (let i = 0; i < this.transformers.length; i += 1) {
 			this.transformers[i].downstream = transformer;
 			transformer = this.transformers[i];
 		}
-		return transformer;
-	}
-
-	// TODO: reducer is a shitty name
-	transduce(reducer) {
-		let transformer = this.build(reducer);
 		return this.source(transformer);
 	}
 
@@ -458,25 +403,74 @@ class Pipeline {
 	}
 }
 
-// we don't want dispatch by type: let the client call the right method
-// source -> transformation1 -> ... -> transformationN -> reducer
-
 // single value
+function valueSource(value) {
+	return function(transformer) {
+		let result = transformer.init();
+		result = transformer.step(result, value);
+		return transformer.result(result);
+	};
+}
+
+// [start, end
+function rangeSource(start, end) {
+	return function(transformer) {
+		let result = transformer.init();
+		for (let i = start; i < end; i += 1) {
+			result = transformer.step(result, i);
+			if (result instanceof Reduced) {
+				break;
+			}
+		}
+		return transformer.result(result);
+	};
+}
+
+// array
+function arraySource(array) {
+	return function(transformer) {
+		let result = transformer.init();
+		for (let i = 0; i < array.length; i += 1) {
+			result = transformer.step(result, array[i]);
+			if (result instanceof Reduced) {
+				break;
+			}
+		}
+		return transformer.result(result);
+	};
+}
+
+// ES6 like iterator
+function iteratorSource(iterator) {
+	return function(transformer) {
+		let result = transformer.init();
+		for (;;) {
+			let it = iterator.next();
+			if (it.done) {
+				break;
+			}
+			result = transformer.step(result, it.value);
+			if (result instanceof Reduced) {
+				break;
+			}
+		}
+		return transformer.result(result);
+	};
+}
+
+// exported API functions
 function fromValue(value) {
 	return new Pipeline(valueSource(value));
 }
 
-// [start, end)
 function fromRange(start, end) {
 	return new Pipeline(rangeSource(start, end));
 }
 
-// array
 function fromArray(array) {
 	return new Pipeline(arraySource(array));
 }
 
-// ES6-iterators
 function fromIterator(iterator) {
 	return new Pipeline(iteratorSource(iterator));
 }
