@@ -394,6 +394,10 @@ class Pipeline {
 		return this.transduce(new ArrayReducer());
 	}
 
+	toObject() {
+		return this.transduce(new ObjectReducer());
+	}
+
 	min() {
 		return this.transduce(new MinReducer());
 	}

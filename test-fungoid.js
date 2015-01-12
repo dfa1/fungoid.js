@@ -129,4 +129,11 @@ describe("demo", function() {
 	   expect(outcome).toEqual({ odd: [ 1, 3 ], even: [ 2, 4 ] });
    });
 
+   it("range -> object", function() {
+	   var identity = function(x) { return x; };
+	   var inc = function(x) { return x+1; };
+	   var outcome = Fungoid.fromRange(0, 1).juxt([identity, inc]).toObject();
+	   expect(outcome).toEqual({0:1});
+   });
+
 });
