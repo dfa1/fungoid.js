@@ -6,6 +6,14 @@
 // - target is ES5
 // - forward compatibility with ES6 iterators
 
+// rename:
+// defluo.js -- latin for flow down
+// mutatio -- change transform
+// plico - to fold
+// servio - to serve
+// commodo : to make fit, adapt, please, oblige, serve.
+// congrego : to gather together, assemble, convene.
+
 // needed to signal that the transformation has been terminated
 class Reduced {
 
@@ -30,12 +38,12 @@ class MapTransformer {
 		return this.downstream.init();
 	}
 
-	result(result) {
-		return this.downstream.result(result);
-	}
-
 	step(result, value) {
 		return this.downstream.step(result, this.fn(value));
+	}
+
+	result(result) {
+		return this.downstream.result(result);
 	}
 }
 
@@ -51,16 +59,16 @@ class FilterTransformer {
 		return this.downstream.init();
 	}
 
-	result(result) {
-		return this.downstream.result(result);
-	}
-
 	step(result, value) {
 		if (this.fn(value)) {
 			return this.downstream.step(result, value);
 		} else {
 			return result;
 		}
+	}
+
+	result(result) {
+		return this.downstream.result(result);
 	}
 }
 
@@ -76,14 +84,6 @@ class TakeTransformer {
 		return this.downstream.init();
 	}
 
-	result(result) {
-		// double check this: other impls unwraps right after step()
-		if (result instanceof Reduced) {
-			result = result.unwrap();
-		}
-		return this.downstream.result(result);
-	}
-
 	step(result, value) {
 		if (this.n > 0) {
 			this.n -= 1;
@@ -92,7 +92,16 @@ class TakeTransformer {
 			return new Reduced(result);
 		}
 	}
+
+	result(result) {
+		// double check this: other impls unwraps right after step()
+		if (result instanceof Reduced) {
+			result = result.unwrap();
+		}
+		return this.downstream.result(result);
+	}
 }
+
 
 // drops 'n' items, then takes everything
 class DropTransformer {
@@ -106,10 +115,6 @@ class DropTransformer {
 		return this.downstream.init();
 	}
 
-	result(result) {
-		return this.downstream.result(result);
-	}
-
 	step(result, value) {
 		if (this.n > 0) {
 			this.n -= 1;
@@ -117,6 +122,10 @@ class DropTransformer {
 		} else {
 			return this.downstream.step(result, value);
 		}
+	}
+
+	result(result) {
+		return this.downstream.result(result);
 	}
 }
 
@@ -131,10 +140,6 @@ class FlattenTransformer {
 		return this.downstream.init();
 	}
 
-	result(result) {
-		return this.downstream.result(result);
-	}
-
 	step(result, value) {
 		if (Array.isArray(value)) {
 			let array = value;
@@ -144,6 +149,10 @@ class FlattenTransformer {
 			return result;
 		}
 		return this.downstream.step(result, value);
+	}
+
+	result(result) {
+		return this.downstream.result(result);
 	}
 }
 
@@ -159,20 +168,18 @@ class JuxtTransformer {
 		return this.downstream.init();
 	}
 
-	result(result) {
-		return this.downstream.result(result);
-	}
-
 	step(result, value) {
 		let values = [];
 		for (let i = 0; i < this.fns.length; i += 1) {
 			let fn = this.fns[i];
-
 			values.push(fn(value));
 		}
 		return this.downstream.step(result, values);
 	}
 
+	result(result) {
+		return this.downstream.result(result);
+	}
 }
 
 // namedJuxt({c:cos, s:sin})(x) = {c: cos(x), s: sin(x)}
@@ -187,10 +194,6 @@ class NamedJuxtTransformer {
 		return this.downstream.init();
 	}
 
-	result(result) {
-		return this.downstream.result(result);
-	}
-
 	step(result, value) {
 		let values = {};
 		for (let k in this.fns) {
@@ -201,21 +204,26 @@ class NamedJuxtTransformer {
 		}
 		return this.downstream.step(result, values);
 	}
+
+	result(result) {
+		return this.downstream.result(result);
+	}
 }
 
-// final step of transformation: reducer
+// final step of transformation: reducers
+
 class ValueReducer {
 
 	init() {
 		return undefined;
 	}
 
-	result(result) {
-		return result;
-	}
-
 	step(result, value) {
 		return value;
+	}
+
+	result(result) {
+		return result;
 	}
 }
 
@@ -264,6 +272,7 @@ class GroupByReducer {
 	}
 
 	step(result, value) {
+		// XXX: perfect use case of ES6 Map
 		let key = this.fn(value);
 		if (!result[key]) {
 			result[key] = [];
