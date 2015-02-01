@@ -143,10 +143,8 @@ class FlattenTransformer {
 			}
 			return result;
 		}
-
 		return this.downstream.step(result, value);
 	}
-
 }
 
 // juxt(cos, sin)(x) = [cos(x), sin(x)]
@@ -203,11 +201,9 @@ class NamedJuxtTransformer {
 		}
 		return this.downstream.step(result, values);
 	}
-
 }
 
 // final step of transformation: reducer
-
 class ValueReducer {
 
 	init() {
@@ -221,7 +217,7 @@ class ValueReducer {
 	step(result, value) {
 		return value;
 	}
-};
+}
 
 class ArrayReducer {
 
@@ -270,7 +266,7 @@ class GroupByReducer {
 	step(result, value) {
 		let key = this.fn(value);
 		if (!result[key]) {
-			result[key]= [];
+			result[key] = [];
 		}
 		result[key].push(value);
 		return result;
@@ -294,7 +290,6 @@ class MaxReducer {
  	result(result) {
 		return result;
 	}
-
 }
 
 class MinReducer {
@@ -310,7 +305,6 @@ class MinReducer {
  	result(result) {
 		return result;
 	}
-
 }
 
 class SumReducer {
@@ -326,10 +320,8 @@ class SumReducer {
 	result(result) {
 		return result;
 	}
-
 }
 
-// experimental chainable operations
 class Pipeline {
 
 	constructor(source) {
