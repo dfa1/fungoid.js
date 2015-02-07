@@ -6,14 +6,6 @@
 // - target is ES5
 // - forward compatibility with ES6 iterators
 
-// rename:
-// defluo.js -- latin for flow down
-// mutatio -- change transform
-// plico - to fold
-// servio - to serve
-// commodo : to make fit, adapt, please, oblige, serve.
-// congrego : to gather together, assemble, convene.
-
 // needed to signal that the transformation has been terminated
 class Reduced {
 
