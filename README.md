@@ -4,6 +4,7 @@ Fungoid
 Yet another transducers implementation for JavaScript.
 
 http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming
+
 http://clojure.org/transducers
 
 > Transducers are composable algorithmic transformations. They are independent from the
@@ -23,5 +24,6 @@ Running Tests
 -------------
 
 `npm install`
+
 `gulp test`
 
