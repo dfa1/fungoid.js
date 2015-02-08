@@ -1,4 +1,4 @@
-var Fungoid = require("./build/fungoid.js");
+var Fungoid = require("../build/fungoid.js");
 
 describe("demo", function() {
 	'use strict';

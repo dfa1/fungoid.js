@@ -11,7 +11,7 @@ var jasmineOptions = {
 };
 
 gulp.task('build', function () {
-    return gulp.src('./fungoid.js')
+    return gulp.src('src/fungoid.js')
 	.pipe(to5())
 	.pipe(umd({
 		exports: function(file)   { return 'exports';},
@@ -23,14 +23,14 @@ gulp.task('build', function () {
 });
 
 gulp.task('test', [ 'build' ], function () {
-	return gulp.src(['test-fungoid.js'])
+	return gulp.src(['test/test-fungoid.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
 	.pipe(jasmine(jasmineOptions));
 });
 
 gulp.task('coverage', [ 'build' ], function () {
-	return gulp.src(['test-fungoid.js'])
+	return gulp.src(['test/test-fungoid.js'])
 	.pipe(cover.instrument({
 		pattern: ['build/fungoid.js'],
 		debugDirectory: 'build/debug'
