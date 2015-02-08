@@ -6,11 +6,10 @@ if (typeof require === 'function') {
 }
 
 function report(testName, executions) {
-	var n = 0;
+	var n = executions.length;
 	var totalMillis = 0;
 	for (var i in executions) {
 		totalMillis += executions[i].elapsedMillis;
-		n += 1;
 	}
 	if (console) {
 		console.log(testName + "\n  mean = " + totalMillis / n + " ms for " + n + " executions");
@@ -21,15 +20,15 @@ function test(times, fn) {
 	var executions = [];
 	for (var i = 0; i < times; i += 1) {
 		var begin = new Date();
-		var res = fn();
+		var result = fn();
 		var end = new Date();
 		var elapsedMillis = (end - begin);
-		executions.push({ elapsedMillis: elapsedMillis, returnValue: res });
+		executions.push({ elapsedMillis: elapsedMillis, result: result });
 	}
 	return executions;
 }
 
-var times = 10;
+var times = 100;
 var size = 10E4;
 
 var input = [];
