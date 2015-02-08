@@ -413,7 +413,7 @@ function valueSource(value) {
 	};
 }
 
-// [start, end
+// [start, end)
 function rangeSource(start, end) {
 	return function(transformer) {
 		let result = transformer.init();

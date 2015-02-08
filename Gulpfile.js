@@ -11,7 +11,7 @@ var jasmineOptions = {
 };
 
 gulp.task('build', function () {
-    return gulp.src('src/fungoid.js')
+	return gulp.src('src/fungoid.js')
 		.pipe(to5())
 		.pipe(umd({
 			exports: function(file)   { return 'exports';},
