@@ -1,18 +1,36 @@
 'use strict';
 
-// for node.js
+
+var times = 10;
+var size = 50E3;
+
+// node specific stuff
 if (typeof require === 'function') {
 	var Fungoid = require("./build/fungoid.js");
+	times = parseInt(process.argv[2]);
+	size = parseInt(process.argv[3]);
 }
 
+if (console) {
+	console.log("array size is " + size);
+	console.log("repeat test " + times + " times");
+}
+
+// helpers
 function report(testName, executions) {
 	var n = executions.length;
-	var totalMillis = 0;
+	var worst = -Infinity;
+	var best = +Infinity;
+	var total = 0;
 	for (var i in executions) {
-		totalMillis += executions[i].elapsedMillis;
+		var current = executions[i].elapsedMillis;
+		total += current;
+		best = Math.min(best, current);
+		worst = Math.max(worst, current);
 	}
+	var mean = total / n;
 	if (console) {
-		console.log(testName + "\n  mean = " + totalMillis / n + " ms for " + n + " executions");
+		console.log(testName + "\n  mean=" + mean.toFixed(1) + ", best=" + best.toFixed(1) + ", worst=" + worst.toFixed(1) + " ms of " + n + " executions");
 	}
 }
 
@@ -28,9 +46,7 @@ function test(times, fn) {
 	return executions;
 }
 
-var times = 100;
-var size = 10E4;
-
+// input and helpers functions
 var input = [];
 for (var i = 0; i < size; i += 1) {
 	input.push(i);
