@@ -30,7 +30,7 @@ function report(testName, executions) {
 	}
 	var mean = total / n;
 	if (console) {
-		console.log(testName + "\n  mean=" + mean.toFixed(1) + ", best=" + best.toFixed(1) + ", worst=" + worst.toFixed(1) + " ms of " + n + " executions");
+		console.log(testName + "\n  mean=" + mean.toFixed(0) + ", best=" + best.toFixed(0) + ", worst=" + worst.toFixed(0) + " ms of " + n + " executions");
 	}
 }
 
