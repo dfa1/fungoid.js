@@ -4,7 +4,7 @@
   "repository": "https://bitbucket.org/dfa/fungoid.js",
   "devDependencies": {
     "gulp": "latest",
-    "gulp-6to5": "latest",
+    "gulp-babel": "latest",
     "gulp-coverage": "latest",
     "gulp-jasmine": "latest",
     "gulp-jshint": "latest",

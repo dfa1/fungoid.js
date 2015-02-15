@@ -1,6 +1,6 @@
 var gulp = require('gulp');
 var umd = require('gulp-umd');
-var to5 = require('gulp-6to5');
+var to5 = require('gulp-babel');
 var jshint = require('gulp-jshint');
 var jasmine = require('gulp-jasmine');
 var cover = require('gulp-coverage');

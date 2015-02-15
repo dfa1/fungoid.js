@@ -476,7 +476,7 @@ function fromIterator(iterator) {
 	return new Pipeline(iteratorSource(iterator));
 }
 
-// workaround for browser
+// public api
 var exports = {};
 export {
 	fromValue,
