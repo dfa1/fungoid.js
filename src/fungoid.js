@@ -476,11 +476,9 @@ function fromIterator(iterator) {
 	return new Pipeline(iteratorSource(iterator));
 }
 
-// public api
-var exports = {};
-export {
-	fromValue,
-	fromRange,
-	fromArray,
-	fromIterator
-}
+var exports = {
+	fromValue: fromValue,
+	fromRange: fromRange,
+	fromArray: fromArray,
+	fromIterator: fromIterator
+};
