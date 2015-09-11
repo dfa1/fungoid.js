@@ -1,22 +1,13 @@
 var gulp = require('gulp');
 var umd = require('gulp-umd');
-var to5 = require('gulp-babel');
+var babel = require('gulp-babel');
 var jshint = require('gulp-jshint');
 var jasmine = require('gulp-jasmine');
 var cover = require('gulp-coverage');
 
-var jasmineOptions = {
-	includeStackTrace: true,
-	verbose: true
-};
-
 gulp.task('build', function () {
 	return gulp.src('src/fungoid.js')
-		.pipe(to5())
-		.pipe(umd({
-			exports: function(file)   { return 'exports';},
-			namespace: function(file) { return 'Fungoid'; }
-		}))
+		.pipe(babel())
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
 		.pipe(gulp.dest('build'));
@@ -26,7 +17,10 @@ gulp.task('test', [ 'build' ], function () {
 	return gulp.src(['test/test-fungoid.js'])
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
-		.pipe(jasmine(jasmineOptions));
+		.pipe(jasmine({
+			includeStackTrace: true,
+			verbose: true
+		}));
 });
 
 gulp.task('coverage', [ 'build' ], function () {
