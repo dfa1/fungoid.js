@@ -460,25 +460,19 @@ function iteratorSource(iterator) {
 }
 
 // exported API functions
-function fromValue(value) {
+export function fromValue(value) {
 	return new Pipeline(valueSource(value));
 }
 
-function fromRange(start, end) {
+export function fromRange(start, end) {
 	return new Pipeline(rangeSource(start, end));
 }
 
-function fromArray(array) {
+export function fromArray(array) {
 	return new Pipeline(arraySource(array));
 }
 
-function fromIterator(iterator) {
+export function fromIterator(iterator) {
 	return new Pipeline(iteratorSource(iterator));
 }
 
-var exports = {
-	fromValue: fromValue,
-	fromRange: fromRange,
-	fromArray: fromArray,
-	fromIterator: fromIterator
-};
