@@ -1,6 +1,7 @@
 {
   "name": "fungoid",
   "version": "0.0.1",
+  "license": "MIT",
   "repository": "https://bitbucket.org/dfa/fungoid.js",
   "devDependencies": {
     "gulp": "latest",

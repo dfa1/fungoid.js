@@ -19,7 +19,7 @@ http://blog.cognitect.com/blog/2014/8/6/transducers-are-coming
 License
 -------
 
-BSD
+MIT
 
 
 Running Tests
