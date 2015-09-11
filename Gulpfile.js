@@ -1,6 +1,6 @@
 var gulp = require('gulp');
-var umd = require('gulp-umd');
 var babel = require('gulp-babel');
+var umd = require('gulp-umd');
 var jshint = require('gulp-jshint');
 var jasmine = require('gulp-jasmine');
 var cover = require('gulp-coverage');
@@ -8,6 +8,9 @@ var cover = require('gulp-coverage');
 gulp.task('build', function () {
 	return gulp.src('src/fungoid.js')
 		.pipe(babel())
+		.pipe(umd({
+			template: 'src/umd_template'
+		}))
 		.pipe(jshint())
 		.pipe(jshint.reporter('default'))
 		.pipe(gulp.dest('build'));

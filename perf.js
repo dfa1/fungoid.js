@@ -1,6 +1,5 @@
 'use strict';
 
-
 var times = 10;
 var size = 50E3;
 

@@ -1,0 +1,11 @@
+;(function(root, factory) {
+  if (typeof exports === 'object') {
+    module.exports = factory({});
+  } else {
+    root.Fungoid = factory({});
+  }
+}(this, function(exports) {
+<%= contents %>
+
+return exports;
+}));
