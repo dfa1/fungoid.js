@@ -7,7 +7,9 @@ var cover = require('gulp-coverage');
 
 gulp.task('build', function () {
 	return gulp.src('src/fungoid.js')
-		.pipe(babel())
+		.pipe(babel({
+			presets: [ 'es2015' ],
+		}))
 		.pipe(umd({
 			template: 'src/umd_template'
 		}))
