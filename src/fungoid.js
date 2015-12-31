@@ -202,8 +202,34 @@ class NamedJuxtTransformer {
 	}
 }
 
-// final step of transformation: reducers
+class InterposeTransformer {
 
+	constructor(sep, downstream) {
+		this.sep = sep;
+		this.downstream = downstream;
+		this.interposing = false;
+	}
+
+	init() {
+		return this.downstream.init();
+	}
+
+	step(result, value) {
+		if (this.interposing) {
+			result = this.downstream.step(result, this.sep);
+		} else {
+			this.interposing = true;
+		}
+		return this.downstream.step(result, value);
+	}
+
+	result(result) {
+		return this.downstream.result(result);
+	}
+
+}
+
+// final step of transformation: reducers
 class ValueReducer {
 
 	init() {
@@ -362,6 +388,11 @@ class Pipeline {
 
 	namedJuxt(fns) {
 		this.transformers.unshift(new NamedJuxtTransformer(fns));
+		return this;
+	}
+
+	interpose(sep) {
+		this.transformers.unshift(new InterposeTransformer(sep));
 		return this;
 	}
 

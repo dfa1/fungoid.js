@@ -136,4 +136,14 @@ describe("demo", function() {
 	   expect(outcome).toEqual({0:1});
    });
 
+   it("range -> interpose -> array", function() {
+	   var outcome = Fungoid.fromRange(1, 4).interpose('x').toArray();
+	   expect(outcome).toEqual([ 1, 'x', 2, 'x', 3 ]);
+   });
+
+   it("empty array -> interpose -> interpose array", function() {
+	   var outcome = Fungoid.fromArray([]).interpose('x').toArray();
+	   expect(outcome).toEqual([]);
+   });
+
 });
