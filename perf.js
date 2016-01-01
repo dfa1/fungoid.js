@@ -36,9 +36,9 @@ function report(testName, executions) {
 function test(times, fn) {
 	var executions = [];
 	for (var i = 0; i < times; i += 1) {
-		var begin = new Date();
+		var begin = performance.now()
 		var result = fn();
-		var end = new Date();
+		var end = performance.now();
 		var elapsedMillis = (end - begin);
 		executions.push({ elapsedMillis: elapsedMillis, result: result });
 	}
