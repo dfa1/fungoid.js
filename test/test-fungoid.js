@@ -141,7 +141,7 @@ describe("demo", function() {
 	   expect(outcome).toEqual([ 1, 'x', 2, 'x', 3 ]);
    });
 
-   it("empty array -> interpose -> interpose array", function() {
+   it("empty array -> interpose -> empty array", function() {
 	   var outcome = Fungoid.fromArray([]).interpose('x').toArray();
 	   expect(outcome).toEqual([]);
    });
