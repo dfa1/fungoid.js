@@ -1,6 +1,6 @@
 'use strict';
 
-var size = 50E3;
+var size = 20E3;
 var times = 100;
 
 // node specific stuff
@@ -13,15 +13,12 @@ if (typeof require === 'function') {
 		times = parseInt(process.argv[2]);
 		size = parseInt(process.argv[3]);
 	} else {
-		if (console) {
-			console.log("hint: array size and times can be overriden as command line arguments (i.e. node perf.js 1000 1000");
-		}
+		console.log("hint: array size and times can be overriden as command line arguments (i.e. node perf.js 1000 1000");
 	}
 }
-if (console) {
-	console.log("array size is " + size);
-	console.log("repeat test " + times + " times");
-}
+
+console.log("array size is " + size);
+console.log("repeat test " + times + " times");
 
 // helpers
 function report(testName, executions) {
@@ -36,9 +33,7 @@ function report(testName, executions) {
 		worst = Math.max(worst, current);
 	}
 	var mean = total / n;
-	if (console) {
-		console.log(testName + "\n  mean=" + mean.toFixed(0) + ", best=" + best.toFixed(0) + ", worst=" + worst.toFixed(0) + " ms of " + n + " executions");
-	}
+	console.log(testName + "\n  mean=" + mean.toFixed(0) + ", best=" + best.toFixed(0) + ", worst=" + worst.toFixed(0) + " ms of " + n + " executions");
 }
 
 function test(times, fn) {
