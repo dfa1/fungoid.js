@@ -5,6 +5,9 @@ var size = 50E3;
 
 // node specific stuff
 if (typeof require === 'function') {
+	var performance = {
+		now: require('performance-now')
+	};
 	var Fungoid = require("./build/fungoid.js");
 	times = parseInt(process.argv[2]);
 	size = parseInt(process.argv[3]);

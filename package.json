@@ -12,6 +12,7 @@
     "gulp-jshint": "^2.0.0",
     "gulp-umd": "^0.2.0",
     "jasmine-core": "^2.4.1",
-    "jshint": "^2.8.0"
+    "jshint": "^2.8.0",
+    "performance-now": "^0.2.0"
   }
 }
