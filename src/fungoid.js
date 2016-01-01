@@ -398,12 +398,12 @@ class Pipeline {
 
 	// reductions
 	transduce(reducer) {
-		let transformer = reducer;
-		for (let i = 0; i < this.transformers.length; i += 1) {
-			this.transformers[i].downstream = transformer;
-			transformer = this.transformers[i];
+		function pipe(pipeline, item) {
+			item.downstream = pipeline;
+			pipeline = item;
+			return pipeline;
 		}
-		return this.source(transformer);
+		return this.source(this.transformers.reduce(pipe, reducer));
 	}
 
 	groupBy(fn) {
