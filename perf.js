@@ -1,7 +1,7 @@
 'use strict';
 
-var times = 100;
 var size = 50E3;
+var times = 100;
 
 // node specific stuff
 if (typeof require === 'function') {
@@ -9,10 +9,15 @@ if (typeof require === 'function') {
 		now: require('performance-now')
 	};
 	var Fungoid = require("./build/fungoid.js");
-	times = parseInt(process.argv[2]);
-	size = parseInt(process.argv[3]);
+	if (process.argv.length == 4) {
+		times = parseInt(process.argv[2]);
+		size = parseInt(process.argv[3]);
+	} else {
+		if (console) {
+			console.log("hint: array size and times can be overriden as command line arguments (i.e. node perf.js 1000 1000");
+		}
+	}
 }
-
 if (console) {
 	console.log("array size is " + size);
 	console.log("repeat test " + times + " times");
