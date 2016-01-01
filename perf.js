@@ -1,6 +1,6 @@
 'use strict';
 
-var times = 10;
+var times = 100;
 var size = 50E3;
 
 // node specific stuff
@@ -48,39 +48,43 @@ function test(times, fn) {
 // input and helpers functions
 var input = [];
 for (var i = 0; i < size; i += 1) {
-	input.push(i);
+	input.push(Math.random() * i);
 }
 
 var isEven = function(e) {
 	return e % 2 === 0;
 };
 
+var isMultipleOf100 = function(e) {
+	return e % 100 === 0;
+};
+
 var toString = function(e) {
 	return String(e);
 };
 
+// Fungoid
+var fungoidExecutions = test(times, function testFungoid() {
+	return Fungoid.fromArray(input).filter(isEven).filter(isMultipleOf100).map(toString).toArray();
+});
+report("Fungoid filter->map", fungoidExecutions);
+
+// array methods
+var arrayMethodsExecutions = test(times, function testArray() {
+	return input.filter(isEven).filter(isMultipleOf100).map(toString);
+});
+report("Array filter->map", arrayMethodsExecutions);
+
 // naive loop
-var jsFilterMapExecutions = test(times, function() {
+var jsFilterMapExecutions = test(times, function testNaive() {
 	var res = [];
 	for (var i = 0; i < size; i += 1) {
 		var e = input[i];
-		if (isEven(e)) {
+		if (isEven(e) && isMultipleOf100(e)) {
 			res.push(toString(e));
 		}
 	}
 	return res;
 });
-report("JS filter->map", jsFilterMapExecutions);
-
-// array methods
-var arrayMethodsExecutions = test(times, function() {
-	return input.filter(isEven).map(toString);
-});
-report("Array filter->map", arrayMethodsExecutions);
-
-// Fungoid
-var fungoidExecutions = test(times, function() {
-	return Fungoid.fromArray(input).filter(isEven).map(toString).toArray();
-});
-report("Fungoid filter->map", fungoidExecutions);
+report("loop filter->map", jsFilterMapExecutions);
 
