@@ -1,7 +1,7 @@
 'use strict';
 
 var size = 20E3;
-var times = 100;
+var times = 1000;
 
 // node specific stuff
 if (typeof require === 'function') {
