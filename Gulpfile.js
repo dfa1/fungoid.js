@@ -33,7 +33,6 @@ gulp.task('test', [ 'build' ], function () {
 		.pipe(jshint(jshint_options))
 		.pipe(jshint.reporter('default'))
 		.pipe(jasmine({
-			includeStackTrace: true,
 			verbose: true
 		}));
 });
