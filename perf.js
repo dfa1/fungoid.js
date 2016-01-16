@@ -66,8 +66,8 @@ var toString = function(e) {
 	return String(e);
 };
 
-// naive loop
-var jsFilterMapExecutions = test(times, function testNaive() {
+// loop
+var jsFilterMapExecutions = test(times, function testLoop() {
 	var res = [];
 	for (var i = 0; i < size; i += 1) {
 		var e = input[i];
@@ -97,5 +97,4 @@ var fungoid2Executions = test(times, function testFungoid() {
 	return pipeline.toArray();
 });
 report("Fungoid #2 (reuse pipeline)", fungoid2Executions);
-
 
