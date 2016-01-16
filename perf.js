@@ -33,7 +33,7 @@ function report(testName, executions) {
 		worst = Math.max(worst, current);
 	}
 	var mean = total / n;
-	console.log(testName + "\n  mean=" + mean.toFixed(0) + ", best=" + best.toFixed(0) + ", worst=" + worst.toFixed(0) + " ms of " + n + " executions");
+	console.log("mean=%sms, best=%sms, worst=%sms of %s executions for '%s'", mean.toFixed(2) , best.toFixed(2), worst.toFixed(2), n, testName);
 }
 
 function test(times, fn) {
@@ -66,18 +66,6 @@ var toString = function(e) {
 	return String(e);
 };
 
-// Fungoid
-var fungoidExecutions = test(times, function testFungoid() {
-	return Fungoid.fromArray(input).filter(isEven).filter(isMultipleOf100).map(toString).toArray();
-});
-report("Fungoid filter->map", fungoidExecutions);
-
-// array methods
-var arrayMethodsExecutions = test(times, function testArray() {
-	return input.filter(isEven).filter(isMultipleOf100).map(toString);
-});
-report("Array filter->map", arrayMethodsExecutions);
-
 // naive loop
 var jsFilterMapExecutions = test(times, function testNaive() {
 	var res = [];
@@ -89,5 +77,25 @@ var jsFilterMapExecutions = test(times, function testNaive() {
 	}
 	return res;
 });
-report("loop filter->map", jsFilterMapExecutions);
+report("loop", jsFilterMapExecutions);
+
+// array methods
+var arrayMethodsExecutions = test(times, function testArray() {
+	return input.filter(isEven).filter(isMultipleOf100).map(toString);
+});
+report("Array", arrayMethodsExecutions);
+
+// Fungoid #1
+var fungoidExecutions = test(times, function testFungoid() {
+	return Fungoid.fromArray(input).filter(isEven).filter(isMultipleOf100).map(toString).toArray();
+});
+report("Fungoid #1", fungoidExecutions);
+
+// Fungoid #2 (reuse pipeline)
+var pipeline = Fungoid.fromArray(input).filter(isEven).filter(isMultipleOf100).map(toString);
+var fungoid2Executions = test(times, function testFungoid() {
+	return pipeline.toArray();
+});
+report("Fungoid #2 (reuse pipeline)", fungoid2Executions);
+
 
