@@ -13,6 +13,7 @@ var jshint_options = {
 	curly: true,
 	eqeqeq: true,
 	jasmine: true,
+	node: true,
 };
 
 gulp.task('build', function () {
