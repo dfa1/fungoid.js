@@ -356,42 +356,42 @@ class Pipeline {
 	}
 
 	map(fn) {
-		this.transformers.unshift(new MapTransformer(fn));
+		this.transformers.unshift(new MapTransformer(fn, null));
 		return this;
 	}
 
 	filter(fn) {
-		this.transformers.unshift(new FilterTransformer(fn));
+		this.transformers.unshift(new FilterTransformer(fn, null));
 		return this;
 	}
 
 	take(n) {
-		this.transformers.unshift(new TakeTransformer(n));
+		this.transformers.unshift(new TakeTransformer(n, null));
 		return this;
 	}
 
 	drop(n) {
-		this.transformers.unshift(new DropTransformer(n));
+		this.transformers.unshift(new DropTransformer(n, null));
 		return this;
 	}
 
 	flatten() {
-		this.transformers.unshift(new FlattenTransformer());
+		this.transformers.unshift(new FlattenTransformer(null));
 		return this;
 	}
 
 	juxt(fns) {
-		this.transformers.unshift(new JuxtTransformer(fns));
+		this.transformers.unshift(new JuxtTransformer(fns, null));
 		return this;
 	}
 
 	namedJuxt(fns) {
-		this.transformers.unshift(new NamedJuxtTransformer(fns));
+		this.transformers.unshift(new NamedJuxtTransformer(fns, null));
 		return this;
 	}
 
 	interpose(sep) {
-		this.transformers.unshift(new InterposeTransformer(sep));
+		this.transformers.unshift(new InterposeTransformer(sep, null));
 		return this;
 	}
 
