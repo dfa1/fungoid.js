@@ -188,8 +188,10 @@ class NamedJuxtTransformer {
 
 	step(result, value) {
 		let values = {};
-		for (let k of Object.keys(this.fns)) {
-			values[k] = this.fns[k](value);
+		for (let k in this.fns) {
+			if (this.fns.hasOwnProperty(k)) {
+				values[k] = this.fns[k](value);
+			}
 		}
 		return this.downstream.step(result, values);
 	}
