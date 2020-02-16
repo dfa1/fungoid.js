@@ -13,7 +13,7 @@ if (typeof require === 'function') {
 		times = parseInt(process.argv[2]);
 		size = parseInt(process.argv[3]);
 	} else {
-		console.log("hint: array size and times can be overriden as command line arguments (i.e. node perf.js 1000 1000)");
+		console.log("hint: array size and times can be overridden as command line arguments (i.e. node perf.js 1000 1000)");
 	}
 }
 
