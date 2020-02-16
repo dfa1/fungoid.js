@@ -3,7 +3,6 @@ var babel = require('gulp-babel');
 var umd = require('gulp-umd');
 var jshint = require('gulp-jshint');
 var jasmine = require('gulp-jasmine');
-var cover = require('gulp-coverage');
 
 var jshint_options = {
 	esnext: true,
@@ -29,24 +28,12 @@ gulp.task('build', function () {
 		.pipe(gulp.dest('build'));
 });
 
-gulp.task('test', [ 'build' ], function () {
+gulp.task('test', gulp.series('build', function () {
 	return gulp.src(['test/test-fungoid.js'])
 		.pipe(jshint(jshint_options))
 		.pipe(jshint.reporter('default'))
 		.pipe(jasmine({
 			verbose: true
 		}));
-});
-
-gulp.task('coverage', [ 'build' ], function () {
-	return gulp.src(['test/test-fungoid.js'])
-		.pipe(cover.instrument({
-			pattern: ['build/fungoid.js'],
-			debugDirectory: 'build/debug'
-		}))
-		.pipe(jasmine())
-		.pipe(cover.gather())
-		.pipe(cover.format())
-		.pipe(gulp.dest('build/reports'));
-});
+}));
 

@@ -7,14 +7,13 @@
   "description": "yet another tranduscer library",
   "devDependencies": {
     "babel-preset-es2015": "^6.3.0",
-    "gulp": "^3.9.0",
+    "gulp": "^4.0.0",
     "gulp-babel": "^6.1.0",
-    "gulp-coverage": "~0.3.0",
-    "gulp-jasmine": "^2.2.0",
+    "gulp-jasmine": "^4.0.0",
     "gulp-jshint": "^2.0.0",
-    "gulp-umd": "^0.2.0",
-    "jasmine-core": "^2.4.1",
-    "jshint": "^2.8.0",
+    "gulp-umd": "^2.0.0",
+    "jasmine-core": "^3.5.0",
+    "jshint": "^2.11.0",
     "performance-now": "^0.2.0"
   }
 }
